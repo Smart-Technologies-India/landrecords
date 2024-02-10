@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  NONE
+  ACTIVE
+  INACTIVE
+}
+
+enum Role {
+  NONE
+  SYSTEM
+  ADMIN
+  USER
+}
+
+model user {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  role      Role      @default(NONE)
+  status    Status    @default(ACTIVE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  file      file[]
+}
+
+model village {
+  id          Int           @id @default(autoincrement())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  deletedAt   DateTime?
+  file        file[]
+  file_survey file_survey[]
+}
+
+model file_type {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  file      file[]
+}
+
+model file {
+  id            Int           @id @default(autoincrement())
+  file_id       String        @unique
+  name          String
+  survey_number String
+  year          Int
+  aadhar        String
+  remarks       String
+  type          file_type     @relation(fields: [typeId], references: [id])
+  typeId        Int
+  village       village       @relation(fields: [villageId], references: [id])
+  villageId     Int
+  file_location String?
+  user          user          @relation(fields: [userId], references: [id])
+  userId        Int
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+  verifiedAt    DateTime?
+  file_name     file_name[]
+  file_survey   file_survey[]
+  file_dates    file_dates[]
+  file_ref      file_ref[]
+}
+
+model file_name {
+  id        Int       @id @default(autoincrement())
+  name      String
+  file      file      @relation(fields: [fileId], references: [id])
+  fileId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model file_survey {
+  id            Int       @id @default(autoincrement())
+  survey_number String
+  file          file      @relation(fields: [fileId], references: [id])
+  fileId        Int
+  village       village   @relation(fields: [villageId], references: [id])
+  villageId     Int
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@unique([survey_number, villageId])
+}
+
+model file_ref {
+  id        Int       @id @default(autoincrement())
+  file_ref  String
+  file      file      @relation(fields: [fileId], references: [id])
+  fileId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model file_dates {
+  id        Int       @id @default(autoincrement())
+  dates     String
+  file      file      @relation(fields: [fileId], references: [id])
+  fileId    Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
