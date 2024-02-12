@@ -1,7 +1,7 @@
 "use server";
 interface SearchFilePayload {
-  file_id?: string;
-  name?: string;
+  file_no?: string;
+  applicant_name?: string;
   survey_number?: string;
   year?: string;
   aadhar?: string;
@@ -24,11 +24,11 @@ const fileSearch = async (
     let files: file[];
 
     let data_for_search: { [key: string]: unknown } = {};
-    if (payload.file_id) {
-      data_for_search.file_id = payload.file_id;
+    if (payload.file_no) {
+      data_for_search.file_no = payload.file_no;
     }
-    if (payload.name) {
-      data_for_search.name = payload.name;
+    if (payload.applicant_name) {
+      data_for_search.name = payload.applicant_name;
     }
     if (payload.survey_number) {
       data_for_search.survey_number = payload.survey_number;
@@ -73,11 +73,11 @@ const fileSearch = async (
         functionname: "fileSearch",
       };
 
-    if (payload.name) {
+    if (payload.applicant_name) {
       const name = await prisma.file_name.findMany({
         where: {
           name: {
-            contains: payload.name,
+            contains: payload.applicant_name,
           },
         },
         include: {

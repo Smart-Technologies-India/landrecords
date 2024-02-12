@@ -8,7 +8,6 @@ import { Fa6SolidArrowLeftLong } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { user } from "@prisma/client";
-import { verify } from "crypto";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -36,6 +35,7 @@ const ViewFile = (props: ViewFileProps) => {
 
     const response = await GetFile({ id: props.fileid });
     if (response.status) {
+      console.log(response.data);
       setFileData((val: any) => response.data);
     } else {
       toast.error(response.message);
@@ -101,6 +101,12 @@ const ViewFile = (props: ViewFileProps) => {
           </div>
           <div className="flex gap-2 items-center mt-4">
             <label htmlFor="fileid" className="w-60">
+              File No :
+            </label>
+            <p>{filedata.file_no}</p>
+          </div>
+          <div className="flex gap-2 items-center mt-4">
+            <label htmlFor="fileid" className="w-60">
               File Type :
             </label>
             <p>{filedata.type.name}</p>
@@ -113,9 +119,9 @@ const ViewFile = (props: ViewFileProps) => {
           </div>
           <div className="flex gap-2 items-center  mt-4">
             <label htmlFor="name" className="w-60">
-              File Name :
+              Applicant Name :
             </label>
-            <p>{filedata.name}</p>
+            <p>{filedata.applicant_name}</p>
           </div>
           <div className="flex gap-2 items-center  mt-4">
             <label htmlFor="survey" className="w-60">
@@ -129,19 +135,24 @@ const ViewFile = (props: ViewFileProps) => {
             </label>
             <p>{filedata.survey_number}</p>
           </div>
-          <div className="flex gap-2 items-center mt-4">
-            <label htmlFor="adhar" className="w-60">
-              Aadhar/Pan/GST :
-            </label>
-            <p>{filedata.aadhar}</p>
-          </div>
+          {filedata.aadhar && (
+            <div className="flex gap-2 items-center mt-4">
+              <label htmlFor="adhar" className="w-60">
+                Aadhar/Pan/GST :
+              </label>
+              <p>{filedata.aadhar}</p>
+            </div>
+          )}
 
-          <div className="flex gap-2 items-start  mt-4">
-            <label htmlFor="remark" className="w-60">
-              Remarks :
-            </label>
-            <p>{filedata.remarks}</p>
-          </div>
+          {filedata.remarks && (
+            <div className="flex gap-2 items-start  mt-4">
+              <label htmlFor="remark" className="w-60">
+                Remarks :
+              </label>
+              <p>{filedata.remarks}</p>
+            </div>
+          )}
+
           {filedata.verifiedAt && (
             <div className="flex gap-2 items-start  mt-4">
               <label htmlFor="remark" className="w-60">
@@ -174,7 +185,7 @@ const ViewFile = (props: ViewFileProps) => {
               <div>
                 {filedata.file_ref.map((val: any, index: number) => (
                   <h1 key={index}>
-                    {index + 1}. {val.name}
+                    {index + 1}. {val.file_ref}
                   </h1>
                 ))}
               </div>
@@ -188,7 +199,7 @@ const ViewFile = (props: ViewFileProps) => {
               <div>
                 {filedata.file_survey.map((val: any, index: number) => (
                   <h1 key={index}>
-                    {index + 1}. {val.name}
+                    {index + 1}. {val.survey_number}
                   </h1>
                 ))}
               </div>
@@ -202,7 +213,7 @@ const ViewFile = (props: ViewFileProps) => {
               <div>
                 {filedata.file_dates.map((val: any, index: number) => (
                   <h1 key={index}>
-                    {index + 1}. {val.name}
+                    {index + 1}. {val.dates}
                   </h1>
                 ))}
               </div>

@@ -21,7 +21,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -77,8 +76,8 @@ const SearchAdmin = (props: HomeProps) => {
   const [fileType, setFileType] = useState<number>(0);
   const [village, setVillage] = useState<number>(0);
 
-  const fileid = useRef<HTMLInputElement>(null);
-  const name = useRef<HTMLInputElement>(null);
+  const file_no = useRef<HTMLInputElement>(null);
+  const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
   const year = useRef<HTMLInputElement>(null);
   const adhar = useRef<HTMLInputElement>(null);
@@ -88,8 +87,8 @@ const SearchAdmin = (props: HomeProps) => {
 
   const search = async () => {
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
-      file_id: fileid.current?.value,
-      name: name.current?.value,
+      file_no: file_no.current?.value,
+      applicant_name: applicant_name.current?.value,
       survey_number: survey.current?.value,
       year: year.current?.value,
       aadhar: adhar.current?.value,
@@ -99,6 +98,7 @@ const SearchAdmin = (props: HomeProps) => {
     });
 
     if (filesearch.status) {
+      
       setSearchData(filesearch.data);
       setSearch(true);
       toast.success("File search completed");
@@ -137,10 +137,15 @@ const SearchAdmin = (props: HomeProps) => {
           Search File Details
         </h1>
         <div className="flex gap-2 items-center mt-4">
-          <label htmlFor="fileid" className="w-60">
-            File Id :
+          <label htmlFor="file_no" className="w-60">
+            File No :
           </label>
-          <Input placeholder="File Id" id="fileid" name="fileid" ref={fileid} />
+          <Input
+            placeholder="Enter File No"
+            id="file_no"
+            name="file_no"
+            ref={file_no}
+          />
         </div>
         <div className="flex gap-2 items-center mt-4">
           <label htmlFor="fileid" className="w-60">
@@ -192,9 +197,14 @@ const SearchAdmin = (props: HomeProps) => {
         </div>
         <div className="flex gap-2 items-center  mt-4">
           <label htmlFor="name" className="w-60">
-            File Name :
+            Applicant Name :
           </label>
-          <Input placeholder="name" id="name" name="name" ref={name} />
+          <Input
+            placeholder="Enter Applicant Name"
+            id="applicant_name"
+            name="applicant_name"
+            ref={applicant_name}
+          />
         </div>
         <div className="flex gap-2 items-center  mt-4">
           <label htmlFor="survey" className="w-60">

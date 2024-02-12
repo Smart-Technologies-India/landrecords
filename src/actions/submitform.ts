@@ -1,12 +1,12 @@
 "use server";
 interface FormPayload {
   user_id: number;
-  file_id: string;
-  name: string;
+  file_no: string;
+  applicant_name: string;
   survey_number: string;
   year: number;
-  aadhar: string;
-  remarks: string;
+  aadhar?: string;
+  remarks?: string;
   typeId: number;
   villageId: number;
   names: string[];
@@ -25,18 +25,26 @@ const fileSubmit = async (
   payload: FormPayload
 ): Promise<ApiResponseType<file | null>> => {
   try {
+    let data_to_update: any = {
+      file_no: payload.file_no,
+      applicant_name: payload.applicant_name,
+      survey_number: payload.survey_number,
+      year: payload.year,
+      typeId: payload.typeId,
+      villageId: payload.villageId,
+      userId: payload.user_id,
+    };
+
+    if (payload.aadhar) {
+      data_to_update["aadhar"] = payload.aadhar;
+    }
+
+    if (payload.remarks) {
+      data_to_update["remarks"] = payload.remarks;
+    }
+
     const file: file = await prisma.file.create({
-      data: {
-        file_id: payload.file_id,
-        name: payload.name,
-        survey_number: payload.survey_number,
-        year: payload.year,
-        aadhar: payload.aadhar,
-        remarks: payload.remarks,
-        typeId: payload.typeId,
-        villageId: payload.villageId,
-        userId: payload.user_id,
-      },
+      data: data_to_update,
     });
 
     if (!file)
@@ -46,6 +54,17 @@ const fileSubmit = async (
         message: "Something want wrong unable to add file.",
         functionname: "fileSubmit",
       };
+
+    const fileid = 124567 + file.id;
+
+    await prisma.file.update({
+      where: {
+        id: file.id,
+      },
+      data: {
+        file_id: fileid.toString(),
+      },
+    });
 
     await prisma.file_name.createMany({
       data: payload.names.map((name) => ({
@@ -75,6 +94,7 @@ const fileSubmit = async (
       })),
     });
 
+    revalidatePath("/home");
 
     return {
       status: true,

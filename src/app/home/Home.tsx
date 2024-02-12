@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import getFileType from "@/actions/getfiletype";
 import GetUser from "@/actions/getuser";
@@ -7,12 +6,7 @@ import logout from "@/actions/logout";
 import fileSubmit from "@/actions/submitform";
 import { Fa6SolidCircleMinus, Fa6SolidCirclePlus } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 import {
@@ -31,7 +25,10 @@ import { file, file_type, user, village } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { safeParse } from "valibot";
+import { safeParse, set } from "valibot";
+
+import { default as MulSelect } from "react-select";
+import { capitalcase } from "@/utils/methods";
 
 interface HomeProps {
   id: any;
@@ -69,13 +66,14 @@ const HomeForm = (props: HomeProps) => {
     init();
   }, []);
 
+  const [year, setYear] = useState<string>("2000");
+
   const [fileType, setFileType] = useState<number>(0);
   const [village, setVillage] = useState<number>(0);
 
-  const fileid = useRef<HTMLInputElement>(null);
-  const name = useRef<HTMLInputElement>(null);
+  const file_no = useRef<HTMLInputElement>(null);
+  const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
-  const year = useRef<HTMLInputElement>(null);
   const adhar = useRef<HTMLInputElement>(null);
   const remark = useRef<HTMLTextAreaElement>(null);
   const [names, setNames] = useState<string[]>([]);
@@ -85,12 +83,10 @@ const HomeForm = (props: HomeProps) => {
 
   const submit = async () => {
     const result = safeParse(FileSchema, {
-      file_id: fileid.current!.value,
-      name: name.current!.value,
+      file_no: file_no.current!.value,
+      applicant_name: applicant_name.current!.value,
       survey_number: survey.current!.value,
-      year: parseInt(year.current!.value),
-      aadhar: adhar.current!.value,
-      remarks: remark.current!.value,
+      year: parseInt(year),
       typeId: fileType,
       villageId: village,
       names: names,
@@ -100,20 +96,25 @@ const HomeForm = (props: HomeProps) => {
     });
 
     if (result.success) {
+      const nameset = new Set(names);
+      const surveyset = new Set(surveyNumbers);
+      const referenceset = new Set(referenceNumbers);
+      const datesset = new Set(dates);
+
       const filesubmit: ApiResponseType<file | null> = await fileSubmit({
         user_id: parseInt(props.id),
-        file_id: result.output.file_id,
-        name: result.output.name,
+        file_no: result.output.file_no,
+        applicant_name: result.output.applicant_name,
         survey_number: result.output.survey_number,
         year: result.output.year,
-        aadhar: result.output.aadhar,
-        remarks: result.output.remarks,
+        aadhar: adhar.current!.value,
+        remarks: remark.current!.value,
         typeId: result.output.typeId,
         villageId: result.output.villageId,
-        names: names,
-        surveyNumbers: surveyNumbers,
-        referenceNumbers: referenceNumbers,
-        dates: dates,
+        names: Array.from(nameset),
+        surveyNumbers: Array.from(surveyset),
+        referenceNumbers: Array.from(referenceset),
+        dates: Array.from(datesset),
       });
 
       if (filesubmit.status) {
@@ -122,7 +123,6 @@ const HomeForm = (props: HomeProps) => {
         toast.error(filesubmit.message);
       }
 
-      router.refresh();
     } else {
       let errorMessage = "";
       if (result.issues[0].input) {
@@ -142,6 +142,15 @@ const HomeForm = (props: HomeProps) => {
       toast.error(response.message);
     }
   };
+
+  type YearProps = {
+    value: string;
+    label: string;
+  };
+  const options: YearProps[] = Array.from({ length: 63 }, (_, i) => ({
+    value: (i + 1960).toString(),
+    label: (i + 1960).toString(),
+  }));
 
   if (isLoading)
     return (
@@ -163,9 +172,14 @@ const HomeForm = (props: HomeProps) => {
         <h1 className="text-center text-2xl font-medium">File Details</h1>
         <div className="flex gap-2 items-center mt-4">
           <label htmlFor="fileid" className="w-60">
-            File Id :
+            File No :
           </label>
-          <Input placeholder="File Id" id="fileid" name="fileid" ref={fileid} />
+          <Input
+            placeholder="Enter File No"
+            id="fileno"
+            name="fileno"
+            ref={file_no}
+          />
         </div>
         <div className="flex gap-2 items-center mt-4">
           <label htmlFor="fileid" className="w-60">
@@ -216,13 +230,18 @@ const HomeForm = (props: HomeProps) => {
           </Select>
         </div>
         <div className="flex gap-2 items-center  mt-4">
-          <label htmlFor="name" className="w-60">
-            File Name :
+          <label htmlFor="applicant_name" className="w-60">
+            Applicant Name :
           </label>
-          <Input placeholder="name" id="name" name="name" ref={name} />
+          <Input
+            placeholder="Enter Applicant Name"
+            id="applicant_name"
+            name="applicant_name"
+            ref={applicant_name}
+          />
         </div>
         <div className="flex gap-2 items-center  mt-4">
-          <label htmlFor="survey" className="w-60">
+          <label htmlFor="Enter Details" className="w-60">
             Survey Number :
           </label>
           <Input placeholder="survey" id="survey" name="survey" ref={survey} />
@@ -231,20 +250,34 @@ const HomeForm = (props: HomeProps) => {
           <label htmlFor="year" className="w-60">
             Year :
           </label>
-          <Input placeholder="year" id="year" name="year" ref={year} />
+          <MulSelect
+            defaultValue={{ value: "2000", label: "2000" }}
+            isMulti={false}
+            options={options}
+            className="w-full accent-slate-900"
+            onChange={(val) => {
+              if (!val) return;
+              setYear(val.value);
+            }}
+          />
         </div>
         <div className="flex gap-2 items-center mt-4">
           <label htmlFor="adhar" className="w-60">
             Aadhar/Pan/GST :
           </label>
-          <Input placeholder="adhar" id="adhar" name="adhar" ref={adhar} />
+          <Input
+            placeholder="Enter Details"
+            id="adhar"
+            name="adhar"
+            ref={adhar}
+          />
         </div>
         <div className="flex gap-2 items-start  mt-4">
           <label htmlFor="remark" className="w-60">
             Remarks :
           </label>
           <Textarea
-            placeholder="Remark"
+            placeholder="Enter Details"
             id="remark"
             name="remark"
             className="h-24 resize-none"
@@ -308,7 +341,12 @@ const InputCard = (props: InputCardProps) => {
               value={val}
               onChange={(e) => {
                 const temp = [...props.values];
-                temp[index] = e.target.value;
+
+                if (props.title == "Name") {
+                  temp[index] = capitalcase(e.target.value);
+                } else {
+                  temp[index] = e.target.value;
+                }
                 props.setvalue((val) => temp);
               }}
               placeholder={props.title}

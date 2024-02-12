@@ -12,14 +12,12 @@ import {
 
 const FileSchema = object(
   {
-    file_id: string([minLength(1, "Please enter file id.")]),
-    name: string([minLength(1, "Please enter file name.")]),
+    file_no: string([minLength(1, "Please enter file number.")]),
+    applicant_name: string([minLength(1, "Please enter applicant name.")]),
     survey_number: string([
       minLength(1, "Please enter your file survey number."),
     ]),
     year: number([minValue(1, "Please enter file year.")]),
-    aadhar: string([minLength(1, "Please enter Aadhar.")]),
-    remarks: string([minLength(1, "Please enter Remark.")]),
     typeId: number([minValue(1, "Select file type.")]),
     villageId: number([minValue(1, "Select village.")]),
     names: array(string([minLength(1, "Please enter name.")])),
