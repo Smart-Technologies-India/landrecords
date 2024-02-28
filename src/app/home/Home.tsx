@@ -119,10 +119,10 @@ const HomeForm = (props: HomeProps) => {
 
       if (filesubmit.status) {
         toast.success("File Submitted Successfully");
+        router.push(`/viewfile/${filesubmit.data?.id}`);
       } else {
         toast.error(filesubmit.message);
       }
-
     } else {
       let errorMessage = "";
       if (result.issues[0].input) {

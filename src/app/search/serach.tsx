@@ -98,7 +98,6 @@ const SearchAdmin = (props: HomeProps) => {
     });
 
     if (filesearch.status) {
-      
       setSearchData(filesearch.data);
       setSearch(true);
       toast.success("File search completed");
@@ -280,7 +279,7 @@ const SearchAdmin = (props: HomeProps) => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[100px]">File Id</TableHead>
-                  <TableHead>File Name</TableHead>
+                  <TableHead>Name</TableHead>
                   <TableHead>Survey Number</TableHead>
                   <TableHead>Year</TableHead>
                   <TableHead>File Type</TableHead>
@@ -292,7 +291,7 @@ const SearchAdmin = (props: HomeProps) => {
                 {searchData.map((val: any) => (
                   <TableRow key={val.id}>
                     <TableCell className="font-medium">{val.id}</TableCell>
-                    <TableCell>{val.name}</TableCell>
+                    <TableCell>{val.applicant_name}</TableCell>
                     <TableCell>{val.survey_number}</TableCell>
                     <TableCell>{val.year}</TableCell>
                     <TableCell>{val.type.name}</TableCell>

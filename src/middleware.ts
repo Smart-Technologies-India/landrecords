@@ -12,6 +12,13 @@ export async function middleware(request: NextRequest) {
     ) {
       return NextResponse.next();
     }
+    if (
+      request.cookies.get("role") == undefined ||
+      request.cookies.get("role") == null
+    ) {
+      return NextResponse.next();
+    }
+
     if (parseInt(request.cookies.get("id")!.value) > 0) {
       return NextResponse.redirect(new URL("/home", request.url));
     }
@@ -23,14 +30,15 @@ export async function middleware(request: NextRequest) {
       request.cookies.get("id") == undefined ||
       request.cookies.get("id") == null
     ) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
     if (
       request.cookies.get("role") == null ||
       request.cookies.get("role") == undefined
-    )
-      return NextResponse.redirect(new URL("/home", request.url));
+    ) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
 
     const role: string = request.cookies.get("role")!.value.toString();
     if (role == "ADMIN") {

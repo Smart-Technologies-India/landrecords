@@ -133,7 +133,7 @@ const ViewFile = (props: ViewFileProps) => {
             <label htmlFor="year" className="w-60">
               Year :
             </label>
-            <p>{filedata.survey_number}</p>
+            <p>{filedata.year}</p>
           </div>
           {filedata.aadhar && (
             <div className="flex gap-2 items-center mt-4">
