@@ -62,7 +62,7 @@ model file {
   survey_number  String
   year           Int
   aadhar         String?
-  remarks        String?
+  remarks        String?       @db.LongText
   type           file_type     @relation(fields: [typeId], references: [id])
   typeId         Int
   village        village       @relation(fields: [villageId], references: [id])
@@ -101,7 +101,7 @@ model file_survey {
   updatedAt     DateTime  @updatedAt
   deletedAt     DateTime?
 
-  @@unique([survey_number, villageId])
+  @@unique([survey_number, villageId, fileId])
 }
 
 model file_ref {
