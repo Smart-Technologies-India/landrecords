@@ -183,9 +183,9 @@ const Dashboard = () => {
       </div>
       <div className="grid grid-cols-6 gap-4 mt-4">
         <div className="flex-1 bg-white p-2 rounded col-span-4"></div>
-        <div className="flex-1 bg-white p-2 rounded col-span-2 max-h-[350px] overflow-y-scroll">
-          <h3>Villages & File Count</h3>
-          <div className="w-full h-[1px] bg-gray-200 my-1"></div>
+        <div className="flex-1 bg-white p-2 rounded col-span-2 max-h-[360px] overflow-y-scroll">
+          <h3 className="text-lg">Villages & File Count</h3>
+          <div className="w-full h-[1px] bg-gray-200 mt-1"></div>
           <Table className="relative">
             <TableHeader className="">
               <TableRow>
