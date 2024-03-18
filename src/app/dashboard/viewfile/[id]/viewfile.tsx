@@ -1,38 +1,43 @@
 "use client";
 
+import GetPdfFiles from "@/actions/files/getpdflist";
 import GetFile from "@/actions/getfile";
-import GetUser from "@/actions/user/getuser";
-import logout from "@/actions/user/logout";
-import verifyFile from "@/actions/verifyfile";
 import { Fa6SolidArrowLeftLong } from "@/components/icons";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader } from "@/components/ui/card";
-import { user } from "@prisma/client";
+import { Card } from "@/components/ui/card";
+import { Separator } from "@radix-ui/react-dropdown-menu";
+import { profile } from "console";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-interface ViewFileProps {
+
+interface filedata {
   id: number;
+  name: string;
+  path: string;
+}
+
+interface ViewFileProps {
   fileid: number;
 }
 const ViewFile = (props: ViewFileProps) => {
   const router = useRouter();
 
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [userdata, setUserData] = useState<user | null>(null);
   const [filedata, setFileData] = useState<any>(null);
+  const [files, setFiles] = useState<filedata[]>([]);
+
+  
+  interface filedata {
+    id: number;
+    name: string;
+    path: string;
+  }
 
   useEffect(() => {
     const init = async () => {
       setLoading(true);
-
-      const responseuser = await GetUser({ id: props.id });
-      if (responseuser.status) {
-        setUserData((val) => responseuser.data);
-      } else {
-        toast.error(responseuser.message);
-      }
 
       const response = await GetFile({ id: props.fileid });
       if (response.status) {
@@ -42,46 +47,15 @@ const ViewFile = (props: ViewFileProps) => {
         toast.error(response.message);
       }
 
+      const responsefile = await GetPdfFiles({ id: props.fileid });
+      if (responsefile.data) {
+        setFiles(responsefile.data);
+      }
+
       setLoading(false);
     };
     init();
-  }, [props.id, props.fileid]);
-
-  const logoutbtn = async () => {
-    const response = await logout({});
-    if (response.status) {
-      router.push("/");
-    } else {
-      toast.error(response.message);
-    }
-  };
-
-  const verifyfile = async () => {
-    const response = await verifyFile({ id: props.fileid });
-    if (response.status) {
-      toast.success(response.message);
-      setLoading(true);
-
-      const responseuser = await GetUser({ id: props.id });
-      if (responseuser.status) {
-        setUserData((val) => responseuser.data);
-      } else {
-        toast.error(responseuser.message);
-      }
-
-      const responsetwo = await GetFile({ id: props.fileid });
-      if (responsetwo.status) {
-        console.log(responsetwo.data);
-        setFileData((val: any) => responsetwo.data);
-      } else {
-        toast.error(responsetwo.message);
-      }
-
-      setLoading(false);
-    } else {
-      toast.error(response.message);
-    }
-  };
+  }, [props.fileid]);
 
   if (isLoading)
     return (
@@ -92,23 +66,15 @@ const ViewFile = (props: ViewFileProps) => {
 
   return (
     <>
-      <div className="min-h-screen p-2 mx-auto w-5/6">
-        <Card>
-          <CardHeader className="py-2 px-4 flex flex-row items-center gap-4">
+      <div className="min-h-screen p-2 mx-auto px-4">
+        <Card className=" h-full p-2 px-6 ">
+          <div className="flex gap-4 items-center">
             <Fa6SolidArrowLeftLong
               className="text-2xl cursor-pointer"
               onClick={() => router.back()}
             />
-            <h1 className="text-xl">{userdata?.username}</h1>
-            <p className="text-2xl grow text-center">Land Records</p>
-            <Button onClick={logoutbtn}>Logout</Button>
-          </CardHeader>
-        </Card>
-
-        <Card className=" h-full p-2 mt-4 px-6">
-          <h1 className="text-center text-2xl font-medium">
-            Search File Details
-          </h1>
+            <h1 className="text-left text-2xl font-medium">File Details</h1>
+          </div>
           <div className="flex gap-2 items-center mt-4">
             <label htmlFor="fileid" className="w-60">
               File Id :
@@ -151,14 +117,14 @@ const ViewFile = (props: ViewFileProps) => {
             </label>
             <p>{filedata.year}</p>
           </div>
-          {filedata.aadhar && (
+          {/* {filedata.aadhar && (
             <div className="flex gap-2 items-center mt-4">
               <label htmlFor="adhar" className="w-60">
                 Aadhar/Pan/GST :
               </label>
               <p>{filedata.aadhar}</p>
             </div>
-          )}
+          )} */}
 
           {filedata.remarks && (
             <div className="flex gap-2 items-start  mt-4">
@@ -179,7 +145,7 @@ const ViewFile = (props: ViewFileProps) => {
           )}
         </Card>
         <div className="flex gap-4 mt-4 w-full flex-wrap">
-          <Card className="p-2 min-w-60 flex-1">
+          <Card className="p-2 min-w-60 flex-1  max-h-60 overflow-y-scroll">
             <h1 className="text-center text-xl font-semibold">Names</h1>
             {filedata.file_name.length > 0 ? (
               <div>
@@ -193,8 +159,8 @@ const ViewFile = (props: ViewFileProps) => {
               <h1 className="text-center mt-2">No File Name</h1>
             )}
           </Card>
-          <Card className="p-2 min-w-60 flex-1">
-            <h1 className="text-center text-xl font-semibold">
+          <Card className="p-2 min-w-60 flex-1  max-h-60 overflow-y-scroll">
+            <h1 className="text-center text-xl font-semibold ">
               File reference
             </h1>
             {filedata.file_ref.length > 0 ? (
@@ -209,7 +175,7 @@ const ViewFile = (props: ViewFileProps) => {
               <h1 className="text-center mt-2">No File reference</h1>
             )}
           </Card>
-          <Card className="p-2 min-w-60 flex-1">
+          <Card className="p-2 min-w-60 flex-1 max-h-60 overflow-y-scroll">
             <h1 className="text-center text-xl font-semibold">File survey</h1>
             {filedata.file_survey.length > 0 ? (
               <div>
@@ -223,7 +189,7 @@ const ViewFile = (props: ViewFileProps) => {
               <h1 className="text-center mt-2">No File survey</h1>
             )}
           </Card>
-          <Card className="p-2 min-w-60 flex-1">
+          {/* <Card className="p-2 min-w-60 flex-1">
             <h1 className="text-center text-xl font-semibold">File dates</h1>
             {filedata.file_dates.length > 0 ? (
               <div>
@@ -236,15 +202,28 @@ const ViewFile = (props: ViewFileProps) => {
             ) : (
               <h1 className="text-center mt-2">No File Dates</h1>
             )}
-          </Card>
+          </Card> */}
         </div>
-        {filedata.verifiedAt == null ? (
-          <Button className="w-full mt-4" onClick={verifyfile}>
-            Verify File
-          </Button>
-        ) : (
-          <></>
-        )}
+        <Card className="bg-white mt-2 p-3 flex flex-col">
+          <p className="text-lg font-semibold">Files</p>
+          <Separator />
+          {files.map((file: filedata, index: number) => {
+            return (
+              <Link
+                key={index}
+                href={`/files/${props.fileid}/${file.name}`}
+                target="_blank"
+                className="text-xs hover:bg-gray-100 rounded-sm p-1 cursor-pointer flex gap-4 items-center"
+              >
+                <p>
+                  {index + 1}. {file.name}
+                </p>
+                <div className="grow"></div>
+                <p className="bg-gray-200 p-1 px-4 rounded-sm">View</p>
+              </Link>
+            );
+          })}
+        </Card>
       </div>
     </>
   );

@@ -20,6 +20,7 @@ enum Role {
   NONE
   SYSTEM
   ADMIN
+  DEPARTMENT
   USER
 }
 
@@ -68,6 +69,8 @@ model file {
   village        village       @relation(fields: [villageId], references: [id])
   villageId      Int
   file_location  String?
+  total_area     String?
+  ownership_type String?
   user           user          @relation(fields: [userId], references: [id])
   userId         Int
   createdAt      DateTime      @default(now())

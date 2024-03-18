@@ -4,11 +4,9 @@ interface GetUserPayload {
 }
 
 import { errorToString } from "@/utils/methods";
-import prisma from "../../prisma/database";
 import { ApiResponseType } from "@/models/response";
 import { user } from "@prisma/client";
-import { compare } from "bcrypt";
-import { cookies } from "next/headers";
+import prisma from "../../../prisma/database"
 
 const GetUser = async (
   payload: GetUserPayload

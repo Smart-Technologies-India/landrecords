@@ -1,8 +1,6 @@
 "use client";
 import getFileType from "@/actions/getfiletype";
-import GetUser from "@/actions/getuser";
 import getVillage from "@/actions/getvillage";
-import logout from "@/actions/logout";
 import fileSubmit from "@/actions/submitform";
 import { Fa6SolidCircleMinus, Fa6SolidCirclePlus } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -25,10 +23,12 @@ import { file, file_type, user, village } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { safeParse, set } from "valibot";
+import { safeParse } from "valibot";
 
 import { default as MulSelect } from "react-select";
 import { capitalcase } from "@/utils/methods";
+import GetUser from "@/actions/user/getuser";
+import logout from "@/actions/user/logout";
 
 interface HomeProps {
   id: any;
@@ -41,30 +41,32 @@ const HomeForm = (props: HomeProps) => {
   const [villages, setVillages] = useState<village[]>([]);
   const [fileTypes, setFileTypes] = useState<file_type[]>([]);
 
-  const init = async () => {
-    setLoading(true);
-    const response = await GetUser({ id: parseInt(props.id) });
-    if (response.status) {
-      setUserData((val) => response.data);
-    } else {
-      toast.error(response.message);
-    }
-
-    const villages_response = await getVillage({});
-    if (villages_response.status) {
-      setVillages(villages_response.data!);
-    }
-
-    const file_type_response = await getFileType({});
-    if (file_type_response.status) {
-      setFileTypes(file_type_response.data!);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const init = async () => {
+      if (props.role == "DEPARTMENT") {
+        router.push("/dashboard");
+      }
+      setLoading(true);
+      const response = await GetUser({ id: parseInt(props.id) });
+      if (response.status) {
+        setUserData((val) => response.data);
+      } else {
+        toast.error(response.message);
+      }
+
+      const villages_response = await getVillage({});
+      if (villages_response.status) {
+        setVillages(villages_response.data!);
+      }
+
+      const file_type_response = await getFileType({});
+      if (file_type_response.status) {
+        setFileTypes(file_type_response.data!);
+      }
+      setLoading(false);
+    };
     init();
-  }, []);
+  }, [props.id]);
 
   const [year, setYear] = useState<string>("2000");
 

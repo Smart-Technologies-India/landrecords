@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import getFileType from "@/actions/getfiletype";
-import GetUser from "@/actions/getuser";
 import getVillage from "@/actions/getvillage";
-import logout from "@/actions/logout";
 import fileSearch from "@/actions/searchfile";
+import GetUser from "@/actions/user/getuser";
+import logout from "@/actions/user/logout";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
