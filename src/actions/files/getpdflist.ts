@@ -2,7 +2,6 @@
 
 import { errorToString } from "@/utils/methods";
 import { ApiResponseType } from "@/models/response";
-import { file } from "@prisma/client";
 import path from "path";
 import { readdir } from "fs/promises";
 interface filedata {
@@ -12,7 +11,7 @@ interface filedata {
 }
 
 interface GetPdfFilesPayload {
-  id: number;
+  location: string;
 }
 
 const GetPdfFiles = async (
@@ -21,7 +20,7 @@ const GetPdfFiles = async (
   try {
     const filepath = path.join(
       process.env.FILE_LOCATIONS ?? "",
-      payload.id.toString()
+      payload.location.toString()
     );
 
     const files = await readdir(filepath, "utf-8");

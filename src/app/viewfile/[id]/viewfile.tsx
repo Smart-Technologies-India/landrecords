@@ -36,7 +36,6 @@ const ViewFile = (props: ViewFileProps) => {
 
       const response = await GetFile({ id: props.fileid });
       if (response.status) {
-        console.log(response.data);
         setFileData((val: any) => response.data);
       } else {
         toast.error(response.message);
@@ -71,7 +70,6 @@ const ViewFile = (props: ViewFileProps) => {
 
       const responsetwo = await GetFile({ id: props.fileid });
       if (responsetwo.status) {
-        console.log(responsetwo.data);
         setFileData((val: any) => responsetwo.data);
       } else {
         toast.error(responsetwo.message);

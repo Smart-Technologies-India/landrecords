@@ -24,10 +24,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
 import { usePagination } from "@/hooks/usepagination";
 import { ApiResponseType } from "@/models/response";
 import { file, file_type, user, village } from "@prisma/client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -64,20 +64,21 @@ const Search = () => {
   const [fileType, setFileType] = useState<number>(0);
   const [village, setVillage] = useState<number>(0);
 
+  const file_id = useRef<HTMLInputElement>(null);
   const file_no = useRef<HTMLInputElement>(null);
   const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
   const year = useRef<HTMLInputElement>(null);
   const fileref = useRef<HTMLInputElement>(null);
-  const remark = useRef<HTMLTextAreaElement>(null);
+  // const remark = useRef<HTMLTextAreaElement>(null);
 
   const searchItems = async () => {
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
       file_no: file_no.current?.value,
+      file_id: file_id.current?.value,
       applicant_name: applicant_name.current?.value,
       survey_number: survey.current?.value,
       year: year.current?.value,
-      remarks: remark.current?.value,
       typeId: fileType,
       villageId: village,
     });
@@ -190,11 +191,22 @@ const Search = () => {
           </Select>
         </div>
         <div className="flex gap-2 items-center mt-4">
-          <label htmlFor="file_no" className="w-60">
-            File No :
+          <label htmlFor="file_id" className="w-60">
+            File Id :
           </label>
           <Input
-            placeholder="Enter File No"
+            placeholder="Enter File ID"
+            id="file_id"
+            name="file_id"
+            ref={file_id}
+          />
+        </div>
+        <div className="flex gap-2 items-center mt-4">
+          <label htmlFor="file_no" className="w-60">
+            Old File No :
+          </label>
+          <Input
+            placeholder="Enter Old File No"
             id="file_no"
             name="file_no"
             ref={file_no}
@@ -261,22 +273,16 @@ const Search = () => {
           />
         </div>
 
-        <div className="flex gap-2 items-start  mt-4">
-          <label htmlFor="remark" className="w-60">
-            Remarks :
-          </label>
-          <Textarea
-            placeholder="Remark"
-            id="remark"
-            name="remark"
-            className="h-24 resize-none"
-            ref={remark}
-          />
-        </div>
+        <div className="flex">
+          <div className="grow"></div>
 
-        <Button className="w-full mt-4" onClick={searchItems}>
-          Search
-        </Button>
+          <Button
+            className="w-40 mt-4 bg-[#172e57] hover:bg-[#21437d]"
+            onClick={searchItems}
+          >
+            Search
+          </Button>
+        </div>
       </Card>
       <Card className="mt-6">
         <CardHeader className="py-2 px-4 flex flex-row items-center">
@@ -317,20 +323,22 @@ const Search = () => {
                 <TableBody>
                   {paginationsearch.paginatedItems.map((val: any) => (
                     <TableRow key={val.id}>
-                      <TableCell className="font-medium">{val.id}</TableCell>
+                      <TableCell className="font-medium">
+                        {val.file_id}
+                      </TableCell>
                       <TableCell>{val.applicant_name}</TableCell>
                       <TableCell>{val.survey_number}</TableCell>
                       <TableCell>{val.year}</TableCell>
                       <TableCell>{val.type.name}</TableCell>
                       <TableCell>{val.village.name}</TableCell>
                       <TableCell>
-                        <Button
-                          onClick={() =>
-                            router.push(`/dashboard/viewfile/${val.id}`)
-                          }
+                        <Link
+                          target="_blank"
+                          className="py-1 px-4 bg-[#172f57] text-white text-lg rounded-md"
+                          href={`/dashboard/viewfile/${val.file_location}`}
                         >
                           View
-                        </Button>
+                        </Link>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -359,20 +367,20 @@ const Search = () => {
               <TableBody>
                 {pagination.paginatedItems.map((val: any) => (
                   <TableRow key={val.id}>
-                    <TableCell className="font-medium">{val.id}</TableCell>
+                    <TableCell className="font-medium">{val.file_id}</TableCell>
                     <TableCell>{val.applicant_name}</TableCell>
                     <TableCell>{val.survey_number}</TableCell>
                     <TableCell>{val.year}</TableCell>
                     <TableCell>{val.type.name}</TableCell>
                     <TableCell>{val.village.name}</TableCell>
                     <TableCell>
-                      <Button
-                        onClick={() =>
-                          router.push(`/dashboard/viewfile/${val.id}`)
-                        }
+                      <Link
+                        target="_blank"
+                        className="py-1 px-4 bg-[#172f57] text-white text-lg rounded-md"
+                        href={`/dashboard/viewfile/${val.file_location}`}
                       >
                         View
-                      </Button>
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}

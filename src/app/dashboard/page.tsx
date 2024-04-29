@@ -87,8 +87,6 @@ const Dashboard = () => {
       if (villagesfile.status) {
         setVillageFile(villagesfile.data!);
       }
-      console.log(villagesfile);
-
       setLoading(false);
     };
     init();
@@ -108,9 +106,7 @@ const Dashboard = () => {
           <div className="w-full h-[1px] bg-gray-200"></div>
           <div className="flex gap-2 items-center px-2">
             <div className="grid place-items-start my-2">
-              <p className="text-xl text-gray-600">
-                {count.village}
-              </p>
+              <p className="text-xl text-gray-600">{count.village}</p>
               <span className="text-xs text-gray-400">Total village Count</span>
             </div>
             <div className="grow"></div>
@@ -127,9 +123,7 @@ const Dashboard = () => {
           <div className="w-full h-[1px] bg-gray-200"></div>
           <div className="flex gap-2 items-center px-2">
             <div className="grid place-items-start my-2">
-              <p className="text-xl text-gray-600">
-                {count.type}
-              </p>
+              <p className="text-xl text-gray-600">{count.type}</p>
               <span className="text-xs text-gray-400">
                 Total File Type Count
               </span>
@@ -148,9 +142,7 @@ const Dashboard = () => {
           <div className="w-full h-[1px] bg-gray-200"></div>
           <div className="flex gap-2 items-center px-2">
             <div className="grid place-items-start my-2">
-              <p className="text-xl text-gray-600">
-                {count.file}
-              </p>
+              <p className="text-xl text-gray-600">{count.file}</p>
               <span className="text-xs text-gray-400">Total Files Count</span>
             </div>
             <div className="grow"></div>
@@ -167,9 +159,7 @@ const Dashboard = () => {
           <div className="w-full h-[1px] bg-gray-200"></div>
           <div className="flex gap-2 items-center px-2">
             <div className="grid place-items-start my-2">
-              <p className="text-xl text-gray-600">
-                {count.page}
-              </p>
+              <p className="text-xl text-gray-600">{count.page}</p>
               <span className="text-xs text-gray-400">Total Page Count</span>
             </div>
             <div className="grow"></div>

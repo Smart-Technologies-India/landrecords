@@ -1,7 +1,6 @@
 "use client";
 import GetAllFiles from "@/actions/files/getallfiles";
 import {
-  Fa6SolidMagnifyingGlass,
   Fa6SolidXmark,
   FluentMdl2Search,
 } from "@/components/icons";
@@ -158,7 +157,7 @@ const AllFiles = () => {
                       <TableCell>
                         <Button
                           onClick={() =>
-                            router.push(`/dashboard/viewfile/${val.id}`)
+                            router.push(`/dashboard/viewfile/${val.file_location}`)
                           }
                         >
                           View
@@ -200,7 +199,7 @@ const AllFiles = () => {
                     <TableCell>
                       <Button
                         onClick={() =>
-                          router.push(`/dashboard/viewfile/${val.id}`)
+                          router.push(`/dashboard/viewfile/${val.file_location}`)
                         }
                       >
                         View

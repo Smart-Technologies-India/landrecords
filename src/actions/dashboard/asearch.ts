@@ -1,5 +1,16 @@
 "use server";
-interface SearchFilePayload {
+
+enum SearchType {
+  VILLAGE_USER,
+  VILLAGE_SURVAY,
+  FILETYPE_VILLAGE,
+  FILETYPE_USER,
+  FILETEYPE_YEAR,
+  VILLAGE_YEAR,
+}
+
+interface ASearchFilePayload {
+  searchtype: SearchType;
   file_no?: string;
   file_id?: string;
   applicant_name?: string;
@@ -14,12 +25,12 @@ interface SearchFilePayload {
 }
 
 import { errorToString } from "@/utils/methods";
-import prisma from "../../prisma/database";
+import prisma from "../../../prisma/database";
 import { ApiResponseType } from "@/models/response";
 import { file } from "@prisma/client";
 
-const fileSearch = async (
-  payload: SearchFilePayload
+const ASearchFile = async (
+  payload: ASearchFilePayload
 ): Promise<ApiResponseType<file[] | null>> => {
   try {
     let files: file[] = [];
@@ -201,7 +212,6 @@ const fileSearch = async (
           },
         },
       });
-
       if (name) {
         files = [...files, ...name.map((n) => n.file)];
       }
@@ -277,21 +287,55 @@ const fileSearch = async (
       (v, i, a) => a.findIndex((t) => t.file_id === v.file_id) === i
     );
 
+    if (payload.searchtype == SearchType.FILETYPE_USER) {
+      files = files.filter(
+        (f) =>
+          f.typeId == payload.typeId &&
+          f.applicant_name.includes(payload.applicant_name!)
+      );
+    } else if (payload.searchtype == SearchType.FILETYPE_VILLAGE) {
+      files = files.filter(
+        (f) => f.typeId == payload.typeId && f.villageId == payload.villageId
+      );
+    } else if (payload.searchtype == SearchType.VILLAGE_USER) {
+      files = files.filter(
+        (f) =>
+          f.villageId == payload.villageId &&
+          f.applicant_name.includes(payload.applicant_name!)
+      );
+    } else if (payload.searchtype == SearchType.VILLAGE_SURVAY) {
+      files = files.filter(
+        (f) =>
+          f.villageId == payload.villageId &&
+          (f.survey_number.includes(payload.survey_number!) ||
+            f.remarks!.includes(payload.survey_number!))
+      );
+    } else if (payload.searchtype == SearchType.VILLAGE_YEAR) {
+      files = files.filter(
+        (f) =>
+          f.villageId == payload.villageId && f.year == parseInt(payload.year!)
+      );
+    } else if (payload.searchtype == SearchType.FILETEYPE_YEAR) {
+      files = files.filter(
+        (f) => f.typeId == payload.typeId && f.year == parseInt(payload.year!)
+      );
+    }
+
     return {
       status: true,
       data: files,
       message: "File data get successfully",
-      functionname: "fileSearch",
+      functionname: "ASearchFile",
     };
   } catch (e) {
     const response: ApiResponseType<null> = {
       status: false,
       data: null,
       message: errorToString(e),
-      functionname: "fileSearch",
+      functionname: "ASearchFile",
     };
     return response;
   }
 };
 
-export default fileSearch;
+export default ASearchFile;

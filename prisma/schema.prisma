@@ -16,12 +16,23 @@ enum Status {
   INACTIVE
 }
 
+enum FileStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum LocationStatus {
+  ACTIVE
+  INACTIVE
+}
+
 enum Role {
   NONE
   SYSTEM
   ADMIN
   DEPARTMENT
   USER
+  FEEDER
 }
 
 model user {
@@ -56,31 +67,35 @@ model file_type {
 }
 
 model file {
-  id             Int           @id @default(autoincrement())
-  file_id        String?       @unique
-  file_no        String
-  applicant_name String
-  survey_number  String
-  year           Int
-  aadhar         String?
-  remarks        String?       @db.LongText
-  type           file_type     @relation(fields: [typeId], references: [id])
-  typeId         Int
-  village        village       @relation(fields: [villageId], references: [id])
-  villageId      Int
-  file_location  String?
-  total_area     String?
-  ownership_type String?
-  user           user          @relation(fields: [userId], references: [id])
-  userId         Int
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  deletedAt      DateTime?
-  verifiedAt     DateTime?
-  file_name      file_name[]
-  file_survey    file_survey[]
-  file_dates     file_dates[]
-  file_ref       file_ref[]
+  id                     Int                     @id @default(autoincrement())
+  file_id                String?                 @unique
+  file_no                String
+  applicant_name         String
+  survey_number          String
+  year                   Int
+  aadhar                 String?
+  remarks                String?                 @db.LongText
+  type                   file_type               @relation(fields: [typeId], references: [id])
+  typeId                 Int
+  village                village                 @relation(fields: [villageId], references: [id])
+  villageId              Int
+  page_number            Int?
+  file_location          String?
+  total_area             String?
+  ownership_type         String?
+  physical_file_location physical_file_location? @relation(fields: [physicalFileLocationId], references: [id])
+  physicalFileLocationId Int?
+  user                   user                    @relation(fields: [userId], references: [id])
+  userId                 Int
+  status                 FileStatus              @default(ACTIVE)
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  deletedAt              DateTime?
+  verifiedAt             DateTime?
+  file_name              file_name[]
+  file_survey            file_survey[]
+  file_dates             file_dates[]
+  file_ref               file_ref[]
 }
 
 model file_name {
@@ -125,4 +140,16 @@ model file_dates {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+}
+
+model physical_file_location {
+  id             Int            @id @default(autoincrement())
+  cupboard_numer String?
+  shelf_number   String?
+  shelf_location String?
+  status         LocationStatus @default(ACTIVE)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+  file           file[]
 }

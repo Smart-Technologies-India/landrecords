@@ -5,12 +5,10 @@ import GetFile from "@/actions/getfile";
 import { Fa6SolidArrowLeftLong } from "@/components/icons";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { profile } from "console";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
 
 interface filedata {
   id: number;
@@ -28,7 +26,8 @@ const ViewFile = (props: ViewFileProps) => {
   const [filedata, setFileData] = useState<any>(null);
   const [files, setFiles] = useState<filedata[]>([]);
 
-  
+  const [pdffile, setPdffile] = useState<string | null>(null);
+
   interface filedata {
     id: number;
     name: string;
@@ -41,15 +40,16 @@ const ViewFile = (props: ViewFileProps) => {
 
       const response = await GetFile({ id: props.fileid });
       if (response.status) {
-        console.log(response.data);
         setFileData((val: any) => response.data);
+
+        const responsefile = await GetPdfFiles({
+          location: response.data?.file_location!,
+        });
+        if (responsefile.data) {
+          setFiles(responsefile.data);
+        }
       } else {
         toast.error(response.message);
-      }
-
-      const responsefile = await GetPdfFiles({ id: props.fileid });
-      if (responsefile.data) {
-        setFiles(responsefile.data);
       }
 
       setLoading(false);
@@ -209,10 +209,11 @@ const ViewFile = (props: ViewFileProps) => {
           <Separator />
           {files.map((file: filedata, index: number) => {
             return (
-              <Link
+              <button
                 key={index}
-                href={`/files/${props.fileid}/${file.name}`}
-                target="_blank"
+                onClick={() =>
+                  setPdffile(`/files/${filedata.file_location}/${file.name}`)
+                }
                 className="text-xs hover:bg-gray-100 rounded-sm p-1 cursor-pointer flex gap-4 items-center"
               >
                 <p>
@@ -220,10 +221,23 @@ const ViewFile = (props: ViewFileProps) => {
                 </p>
                 <div className="grow"></div>
                 <p className="bg-gray-200 p-1 px-4 rounded-sm">View</p>
-              </Link>
+              </button>
             );
           })}
         </Card>
+        {pdffile !== null && (
+          <>
+            <div className="w-full my-4 bg-rose-500">
+              <embed
+                src={pdffile}
+                // width="100%"
+                // height="100vh"
+                className="w-full h-[calc(100vh-50px)]"
+                type="application/pdf"
+              />
+            </div>
+          </>
+        )}
       </div>
     </>
   );

@@ -58,24 +58,24 @@ const Sidebar = (props: SidebarProps) => {
         pathcheck={"/dashboard"}
       />
       <MenuTab
-        icco={<FluentMdl2Search className="text-gray-300  w-6" />}
+        icco={<GgSearch className="text-gray-300  w-6" />}
         name="Search"
         path={path}
-        pathcheck={"/dashboard/search"}
+        pathcheck={"/dashboard/asearch"}
       />
+
       <MenuTab
         icco={<Fa6RegularFileLines className="text-gray-300  w-6" />}
         name="All Files"
         path={path}
         pathcheck={"/dashboard/allfiles"}
       />
-
-      {/* <MenuTab
-        icco={<GgSearch className="text-gray-300  w-6" />}
+      <MenuTab
+        icco={<FluentMdl2Search className="text-gray-300  w-6" />}
         name="Advance Search"
         path={path}
-        pathcheck={"/dashboard/asearch"}
-      /> */}
+        pathcheck={"/dashboard/search"}
+      />
 
       <div className="grow"></div>
 
