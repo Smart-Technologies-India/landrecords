@@ -283,43 +283,106 @@ const ASearchFile = async (
       }
     }
 
-    files = files.filter(
-      (v, i, a) => a.findIndex((t) => t.file_id === v.file_id) === i
-    );
-
     if (payload.searchtype == SearchType.FILETYPE_USER) {
-      files = files.filter(
-        (f) =>
-          f.typeId == payload.typeId &&
-          f.applicant_name.includes(payload.applicant_name!)
-      );
+      // done
+      const search_files = await prisma.file_name.findMany({
+        where: {
+          name: {
+            contains: payload.applicant_name,
+          },
+        },
+        include: {
+          file: true,
+        },
+      });
+
+      const search_files2 = await prisma.file.findMany({
+        where: {
+          applicant_name: {
+            contains: payload.applicant_name,
+          },
+        },
+      });
+
+      const all_search_file = [
+        ...search_files2,
+        ...search_files.map((f) => f.file),
+      ];
+
+      files = all_search_file.filter((f) => f.typeId == payload.typeId);
     } else if (payload.searchtype == SearchType.FILETYPE_VILLAGE) {
+      // done
       files = files.filter(
         (f) => f.typeId == payload.typeId && f.villageId == payload.villageId
       );
     } else if (payload.searchtype == SearchType.VILLAGE_USER) {
-      files = files.filter(
-        (f) =>
-          f.villageId == payload.villageId &&
-          f.applicant_name.includes(payload.applicant_name!)
-      );
+      // done
+      const search_files = await prisma.file_name.findMany({
+        where: {
+          name: {
+            contains: payload.applicant_name,
+          },
+        },
+        include: {
+          file: true,
+        },
+      });
+
+      const search_files2 = await prisma.file.findMany({
+        where: {
+          applicant_name: {
+            contains: payload.applicant_name,
+          },
+        },
+      });
+      const all_search_file = [
+        ...search_files2,
+        ...search_files.map((f) => f.file),
+      ];
+
+      files = all_search_file.filter((f) => f.villageId == payload.villageId);
     } else if (payload.searchtype == SearchType.VILLAGE_SURVAY) {
-      files = files.filter(
-        (f) =>
-          f.villageId == payload.villageId &&
-          (f.survey_number.includes(payload.survey_number!) ||
-            f.remarks!.includes(payload.survey_number!))
-      );
+      // done
+      const search_files = await prisma.file_survey.findMany({
+        where: {
+          survey_number: {
+            contains: payload.survey_number,
+          },
+        },
+        include: {
+          file: true,
+        },
+      });
+
+      const search_files2 = await prisma.file.findMany({
+        where: {
+          survey_number: {
+            contains: payload.survey_number,
+          },
+        },
+      });
+      const all_search_file = [
+        ...search_files2,
+        ...search_files.map((f) => f.file),
+      ];
+
+      files = all_search_file.filter((f) => f.villageId == payload.villageId);
     } else if (payload.searchtype == SearchType.VILLAGE_YEAR) {
+      // done
       files = files.filter(
         (f) =>
           f.villageId == payload.villageId && f.year == parseInt(payload.year!)
       );
     } else if (payload.searchtype == SearchType.FILETEYPE_YEAR) {
+      // done
       files = files.filter(
         (f) => f.typeId == payload.typeId && f.year == parseInt(payload.year!)
       );
     }
+
+    files = files.filter(
+      (v, i, a) => a.findIndex((t) => t.file_id === v.file_id) === i
+    );
 
     return {
       status: true,

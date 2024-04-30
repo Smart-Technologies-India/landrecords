@@ -76,12 +76,9 @@ const ASearch = () => {
   const [fileType, setFileType] = useState<number>(0);
   const [village, setVillage] = useState<number>(0);
 
-  // const file_id = useRef<HTMLInputElement>(null);
-  // const file_no = useRef<HTMLInputElement>(null);
   const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
   const year = useRef<HTMLInputElement>(null);
-  // const fileref = useRef<HTMLInputElement>(null);
 
   const searchItems = async () => {
     if (searchtype === SearchType.VILLAGE_USER) {

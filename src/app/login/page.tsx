@@ -29,12 +29,18 @@ export default function Home() {
         password: result.output.password,
         username: result.output.username,
       });
+
+
       if (registerrespone.status) {
         if (registerrespone.data?.role === "ADMIN") {
           router.push("/search");
         } else if (registerrespone.data?.role === "FEEDER") {
           router.push("/feeder");
         } else if (registerrespone.data?.role === "USER") {
+          router.push("/home");
+        } else if (registerrespone.data?.role === "DEPARTMENT") {
+          router.push("/dashboard");
+        } else {
           router.push("/home");
         }
       } else {
