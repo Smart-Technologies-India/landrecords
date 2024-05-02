@@ -475,12 +475,9 @@ const LocationBox = (props: LocationBoxProps) => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Shelf Number</SelectLabel>
-                {cupboard_number.map((val) => (
-                  <SelectItem
-                    key={val.id}
-                    value={val.cupboard_numer!.toString()}
-                  >
-                    {val.cupboard_numer}
+                {shelf_number.map((val) => (
+                  <SelectItem key={val.id} value={val.shelf_number!.toString()}>
+                    {val.shelf_number}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -611,6 +608,8 @@ const LocationToFile = (props: { userid: number }) => {
                 const shelf_number = alllocation.data?.filter(
                   (value) => value.cupboard_numer?.toString() == val.toString()
                 );
+
+                console.log(shelf_number);
                 setShelfNumber(shelf_number!);
               }
             }}
@@ -658,12 +657,12 @@ const LocationToFile = (props: { userid: number }) => {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Shelf Number</SelectLabel>
-                  {cupboard_number.map((val) => (
+                  {shelf_number.map((val) => (
                     <SelectItem
                       key={val.id}
-                      value={val.cupboard_numer!.toString()}
+                      value={val.shelf_number!.toString()}
                     >
-                      {val.cupboard_numer}
+                      {val.shelf_number}
                     </SelectItem>
                   ))}
                 </SelectGroup>
