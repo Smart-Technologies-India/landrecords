@@ -86,6 +86,8 @@ const SearchAdmin = (props: HomeProps) => {
   const remark = useRef<HTMLTextAreaElement>(null);
 
   const search = async () => {
+ 
+
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
       file_no: file_no.current?.value,
       applicant_name: applicant_name.current?.value,

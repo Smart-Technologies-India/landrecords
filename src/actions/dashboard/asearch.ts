@@ -292,7 +292,12 @@ const ASearchFile = async (
           },
         },
         include: {
-          file: true,
+          file: {
+            include: {
+              type: true,
+              village: true,
+            },
+          },
         },
       });
 
@@ -301,6 +306,10 @@ const ASearchFile = async (
           applicant_name: {
             contains: payload.applicant_name,
           },
+        },
+        include: {
+          type: true,
+          village: true,
         },
       });
 
@@ -324,7 +333,12 @@ const ASearchFile = async (
           },
         },
         include: {
-          file: true,
+          file: {
+            include: {
+              type: true,
+              village: true,
+            },
+          },
         },
       });
 
@@ -333,6 +347,10 @@ const ASearchFile = async (
           applicant_name: {
             contains: payload.applicant_name,
           },
+        },
+        include: {
+          type: true,
+          village: true,
         },
       });
       const all_search_file = [
@@ -350,7 +368,12 @@ const ASearchFile = async (
           },
         },
         include: {
-          file: true,
+          file: {
+            include: {
+              type: true,
+              village: true,
+            },
+          },
         },
       });
 
@@ -359,6 +382,10 @@ const ASearchFile = async (
           survey_number: {
             contains: payload.survey_number,
           },
+        },
+        include: {
+          type: true,
+          village: true,
         },
       });
       const all_search_file = [

@@ -48,6 +48,7 @@ export default function DashboardLayout({
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           name={userdata?.username ?? ""}
+          role={userdata?.role.toString() ?? ""}
         ></Navbar>
         {children}
       </div>

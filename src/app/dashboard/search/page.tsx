@@ -26,14 +26,14 @@ import {
 } from "@/components/ui/table";
 import { usePagination } from "@/hooks/usepagination";
 import { ApiResponseType } from "@/models/response";
+import { handleNumberChange } from "@/utils/methods";
 import { file, file_type, user, village } from "@prisma/client";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 const Search = () => {
-  const router = useRouter();
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [villages, setVillages] = useState<village[]>([]);
   const [fileTypes, setFileTypes] = useState<file_type[]>([]);
@@ -73,6 +73,22 @@ const Search = () => {
   // const remark = useRef<HTMLTextAreaElement>(null);
 
   const searchItems = async () => {
+    setIsSearching(true);
+    if (
+      fileType === 0 &&
+      village === 0 &&
+      !file_id.current?.value &&
+      !file_no.current?.value &&
+      !applicant_name.current?.value &&
+      !survey.current?.value &&
+      !year.current?.value &&
+      !fileref.current?.value
+    ) {
+      toast.error("Please enter any search criteria");
+      setIsSearching(false);
+      return;
+    }
+
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
       file_no: file_no.current?.value,
       file_id: file_id.current?.value,
@@ -90,6 +106,7 @@ const Search = () => {
     } else {
       toast.error(filesearch.message);
     }
+    setIsSearching(false);
   };
 
   // ---------------search section----------------
@@ -258,7 +275,13 @@ const Search = () => {
           <label htmlFor="year" className="w-60">
             Year :
           </label>
-          <Input placeholder="year" id="year" name="year" ref={year} />
+          <Input
+            onChange={handleNumberChange}
+            placeholder="year"
+            id="year"
+            name="year"
+            ref={year}
+          />
         </div>
 
         <div className="flex gap-2 items-center mt-4">
@@ -275,13 +298,21 @@ const Search = () => {
 
         <div className="flex">
           <div className="grow"></div>
-
-          <Button
-            className="w-40 mt-4 bg-[#172e57] hover:bg-[#21437d]"
-            onClick={searchItems}
-          >
-            Search
-          </Button>
+          {isSearching ? (
+            <Button
+              className="w-40 mt-4 bg-[#172e57] hover:bg-[#21437d]"
+              disabled
+            >
+              Searching...
+            </Button>
+          ) : (
+            <Button
+              className="w-40 mt-4 bg-[#172e57] hover:bg-[#21437d]"
+              onClick={searchItems}
+            >
+              Search
+            </Button>
+          )}
         </div>
       </Card>
       <Card className="mt-6">
@@ -335,7 +366,7 @@ const Search = () => {
                         <Link
                           target="_blank"
                           className="py-1 px-4 bg-[#172f57] text-white text-lg rounded-md"
-                          href={`/dashboard/viewfile/${val.file_location}`}
+                          href={`/dashboard/viewfile/${val.id}`}
                         >
                           View
                         </Link>
@@ -377,7 +408,7 @@ const Search = () => {
                       <Link
                         target="_blank"
                         className="py-1 px-4 bg-[#172f57] text-white text-lg rounded-md"
-                        href={`/dashboard/viewfile/${val.file_location}`}
+                        href={`/dashboard/viewfile/${val.id}`}
                       >
                         View
                       </Link>

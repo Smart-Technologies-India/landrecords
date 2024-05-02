@@ -23,6 +23,7 @@ const GetFile = async (
         file_survey: true,
         file_ref: true,
         file_dates: true,
+        physical_file_location: true,
       },
     });
 

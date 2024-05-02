@@ -1,5 +1,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import {
+  CarbonPassword,
   Fa6RegularFileLines,
   FluentMdl2Home,
   FluentMdl2Search,
@@ -47,7 +48,7 @@ const Sidebar = (props: SidebarProps) => {
       }  transition-transform duration-300 ease-in-out`}
     >
       <p className="text-xl font-semibold text-white text-center">
-        Land Records
+        Bhoomi Bandhu
       </p>
       <div className="h-4"></div>
 
@@ -87,6 +88,13 @@ const Sidebar = (props: SidebarProps) => {
         <p>Close</p>
       </button>
 
+      <Link
+        href={"/dashboard/changepassword"}
+        className={`flex justify-start gap-4 rounded-none px-4 py-2 hover:bg-green-500 hover:border-l-2 hover:border-green-500 bg-transparent hover:bg-opacity-20 `}
+      >
+        <CarbonPassword className="text-gray-300  w-6" />
+        <p className="text-gray-300 text-sm">Change Password</p>
+      </Link>
       <Button
         onClick={logoutbtn}
         className={`flex justify-start gap-4 rounded-none px-4 py-2 hover:bg-rose-500 hover:border-l-2 hover:border-rose-500 bg-transparent hover:bg-opacity-20 `}

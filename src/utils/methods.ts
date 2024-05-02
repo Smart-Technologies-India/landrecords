@@ -1,5 +1,3 @@
-import { value } from "valibot";
-
 const errorToString = (e: unknown): string => {
   let err: string = "";
   if (typeof e === "string") {
@@ -29,3 +27,14 @@ const capitalcase = (value: string): string => {
 };
 
 export { capitalcase };
+
+const onlyNumbersRegex = /^[0-9]*$/;
+
+const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { value } = event.target;
+  if (!onlyNumbersRegex.test(value)) {
+    event.target.value = event.target.value.slice(0, -1);
+  }
+};
+
+export { handleNumberChange };

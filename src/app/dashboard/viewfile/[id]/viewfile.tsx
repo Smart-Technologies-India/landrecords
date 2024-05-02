@@ -5,7 +5,7 @@ import GetFile from "@/actions/getfile";
 import { Fa6SolidArrowLeftLong } from "@/components/icons";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -21,6 +21,9 @@ interface ViewFileProps {
 }
 const ViewFile = (props: ViewFileProps) => {
   const router = useRouter();
+
+  const [showimage, setShowImage] = useState<boolean>(false);
+  const [image, setImage] = useState<string>("/img.jpg");
 
   const [isLoading, setLoading] = useState<boolean>(true);
   const [filedata, setFileData] = useState<any>(null);
@@ -39,9 +42,10 @@ const ViewFile = (props: ViewFileProps) => {
       setLoading(true);
 
       const response = await GetFile({ id: props.fileid });
+
+      console.log(response);
       if (response.status) {
         setFileData((val: any) => response.data);
-
         const responsefile = await GetPdfFiles({
           location: response.data?.file_location!,
         });
@@ -67,7 +71,7 @@ const ViewFile = (props: ViewFileProps) => {
   return (
     <>
       <div className="min-h-screen p-2 mx-auto px-4">
-        <Card className=" h-full p-2 px-6 ">
+        <Card className=" h-full p-2 px-6 text-sm">
           <div className="flex gap-4 items-center">
             <Fa6SolidArrowLeftLong
               className="text-2xl cursor-pointer"
@@ -75,43 +79,43 @@ const ViewFile = (props: ViewFileProps) => {
             />
             <h1 className="text-left text-2xl font-medium">File Details</h1>
           </div>
-          <div className="flex gap-2 items-center mt-4">
-            <label htmlFor="fileid" className="w-60">
-              File Id :
-            </label>
-            <p>{filedata.file_id}</p>
-          </div>
-          <div className="flex gap-2 items-center mt-4">
+          <div className="flex gap-2 items-center mt-2">
             <label htmlFor="fileid" className="w-60">
               File No :
             </label>
+            <p>{filedata.file_id}</p>
+          </div>
+          <div className="flex gap-2 items-center mt-2">
+            <label htmlFor="fileid" className="w-60">
+              Old File No :
+            </label>
             <p>{filedata.file_no}</p>
           </div>
-          <div className="flex gap-2 items-center mt-4">
+          <div className="flex gap-2 items-center mt-2">
             <label htmlFor="fileid" className="w-60">
               File Type :
             </label>
             <p>{filedata.type.name}</p>
           </div>
-          <div className="flex gap-2 items-center mt-4">
+          <div className="flex gap-2 items-center mt-2">
             <label htmlFor="fileid" className="w-60">
               Village :
             </label>
             <p>{filedata.village.name}</p>
           </div>
-          <div className="flex gap-2 items-center  mt-4">
+          <div className="flex gap-2 items-center  mt-2">
             <label htmlFor="name" className="w-60">
               Applicant Name :
             </label>
             <p>{filedata.applicant_name}</p>
           </div>
-          <div className="flex gap-2 items-center  mt-4">
+          <div className="flex gap-2 items-center  mt-2">
             <label htmlFor="survey" className="w-60">
               Survey Number :
             </label>
             <p>{filedata.survey_number}</p>
           </div>
-          <div className="flex gap-2 items-center  mt-4">
+          <div className="flex gap-2 items-center  mt-2">
             <label htmlFor="year" className="w-60">
               Year :
             </label>
@@ -127,11 +131,35 @@ const ViewFile = (props: ViewFileProps) => {
           )} */}
 
           {filedata.remarks && (
-            <div className="flex gap-2 items-start  mt-4">
+            <div className="flex gap-2 items-start  mt-2">
               <label htmlFor="remark" className="w-60">
                 Remarks :
               </label>
               <p>{filedata.remarks}</p>
+            </div>
+          )}
+          {filedata.physicalFileLocationId && (
+            <div className="flex gap-2 items-start  mt-2">
+              <label htmlFor="remark" className="w-60">
+                File Location :
+              </label>
+              <div className="flex gap-4">
+                <p>
+                  {filedata.physical_file_location.cupboard_numer}-
+                  {filedata.physical_file_location.shelf_number} (
+                  {filedata.physical_file_location.shelf_location})
+                </p>
+                <button
+                  className="bg-gray-200 p-1 px-4 rounded-sm"
+                  onClick={() => {
+                    // setImage(`/location/${filedata.file_location}${filedata.physical_file_location.cupboard_number}_${filedata.physical_file_location.shelf_number}.jpg`);
+                    setImage(`/location/test.jpg`);
+                    setShowImage(!showimage);
+                  }}
+                >
+                  View
+                </button>
+              </div>
             </div>
           )}
 
@@ -144,13 +172,21 @@ const ViewFile = (props: ViewFileProps) => {
             </div>
           )}
         </Card>
+        {showimage && (
+          <div className="bg-white rounded-md p-10 mt-4 shadow h-[500px]">
+            <div className="relative h-[420px] w-full">
+              <Image src={image} alt="error" fill={true} className="border border-black"/>
+            </div>
+          </div>
+        )}
+
         <div className="flex gap-4 mt-4 w-full flex-wrap">
           <Card className="p-2 min-w-60 flex-1  max-h-60 overflow-y-scroll">
-            <h1 className="text-center text-xl font-semibold">Names</h1>
+            <h1 className="text-center text-lg font-semibold">Names</h1>
             {filedata.file_name.length > 0 ? (
               <div>
                 {filedata.file_name.map((val: any, index: number) => (
-                  <h1 key={index}>
+                  <h1 key={index} className="text-sm">
                     {index + 1}. {val.name}
                   </h1>
                 ))}
@@ -160,33 +196,31 @@ const ViewFile = (props: ViewFileProps) => {
             )}
           </Card>
           <Card className="p-2 min-w-60 flex-1  max-h-60 overflow-y-scroll">
-            <h1 className="text-center text-xl font-semibold ">
-              File reference
-            </h1>
+            <h1 className="text-center text-lg font-semibold ">Reference No</h1>
             {filedata.file_ref.length > 0 ? (
               <div>
                 {filedata.file_ref.map((val: any, index: number) => (
-                  <h1 key={index}>
+                  <h1 key={index} className="text-sm">
                     {index + 1}. {val.file_ref}
                   </h1>
                 ))}
               </div>
             ) : (
-              <h1 className="text-center mt-2">No File reference</h1>
+              <h1 className="text-center mt-2">No Reference no. found.</h1>
             )}
           </Card>
           <Card className="p-2 min-w-60 flex-1 max-h-60 overflow-y-scroll">
-            <h1 className="text-center text-xl font-semibold">File survey</h1>
+            <h1 className="text-center text-lg font-semibold">Survey No</h1>
             {filedata.file_survey.length > 0 ? (
               <div>
                 {filedata.file_survey.map((val: any, index: number) => (
-                  <h1 key={index}>
+                  <h1 key={index} className="text-sm">
                     {index + 1}. {val.survey_number}
                   </h1>
                 ))}
               </div>
             ) : (
-              <h1 className="text-center mt-2">No File survey</h1>
+              <h1 className="text-center mt-2">No Survey no. found.</h1>
             )}
           </Card>
           {/* <Card className="p-2 min-w-60 flex-1">
@@ -211,9 +245,15 @@ const ViewFile = (props: ViewFileProps) => {
             return (
               <button
                 key={index}
-                onClick={() =>
-                  setPdffile(`/files/${filedata.file_location}/${file.name}`)
-                }
+                onClick={() => {
+                  setPdffile(`/files/${filedata.file_location}/${file.name}`);
+                  setTimeout(() => {
+                    window.scrollTo({
+                      top: document.documentElement.scrollHeight,
+                      behavior: "smooth",
+                    });
+                  }, 500);
+                }}
                 className="text-xs hover:bg-gray-100 rounded-sm p-1 cursor-pointer flex gap-4 items-center"
               >
                 <p>
@@ -227,11 +267,9 @@ const ViewFile = (props: ViewFileProps) => {
         </Card>
         {pdffile !== null && (
           <>
-            <div className="w-full my-4 bg-rose-500">
+            <div className="w-full my-4">
               <embed
                 src={pdffile}
-                // width="100%"
-                // height="100vh"
                 className="w-full h-[calc(100vh-50px)]"
                 type="application/pdf"
               />

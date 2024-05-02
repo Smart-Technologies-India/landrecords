@@ -26,13 +26,17 @@ import {
 } from "@/components/ui/table";
 import { usePagination } from "@/hooks/usepagination";
 import { ApiResponseType } from "@/models/response";
+import { handleNumberChange } from "@/utils/methods";
 import { file, file_type, user, village } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
+import { is } from "valibot";
 
 const ASearch = () => {
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+
   enum SearchType {
     VILLAGE_USER,
     VILLAGE_SURVAY,
@@ -81,9 +85,11 @@ const ASearch = () => {
   const year = useRef<HTMLInputElement>(null);
 
   const searchItems = async () => {
+    setIsSearching(true);
     if (searchtype === SearchType.VILLAGE_USER) {
       if (!village || village === 0) {
         toast.error("Village is required");
+        setIsSearching(false);
         return;
       }
       if (
@@ -91,6 +97,8 @@ const ASearch = () => {
         applicant_name.current?.value === ""
       ) {
         toast.error("Applicant name is required");
+        setIsSearching(false);
+
         return;
       }
 
@@ -110,11 +118,15 @@ const ASearch = () => {
     } else if (searchtype === SearchType.VILLAGE_SURVAY) {
       if (!village || village === 0) {
         toast.error("Village is required");
+        setIsSearching(false);
+
         return;
       }
 
       if (!survey.current?.value || survey.current?.value === "") {
         toast.error("Survey number is required");
+        setIsSearching(false);
+
         return;
       }
       const filesearch: ApiResponseType<file[] | null> = await ASearchFile({
@@ -133,10 +145,14 @@ const ASearch = () => {
     } else if (searchtype === SearchType.FILETYPE_VILLAGE) {
       if (!village || village === 0) {
         toast.error("Village is required");
+        setIsSearching(false);
+
         return;
       }
       if (!fileType || fileType === 0) {
         toast.error("File Type is required");
+        setIsSearching(false);
+
         return;
       }
       const filesearch: ApiResponseType<file[] | null> = await ASearchFile({
@@ -155,11 +171,15 @@ const ASearch = () => {
     } else if (searchtype === SearchType.FILETEYPE_YEAR) {
       if (!year.current?.value || year.current?.value === "") {
         toast.error("Year is required");
+        setIsSearching(false);
+
         return;
       }
 
       if (!fileType || fileType === 0) {
         toast.error("File Type is required");
+        setIsSearching(false);
+
         return;
       }
 
@@ -181,10 +201,14 @@ const ASearch = () => {
         applicant_name.current?.value === ""
       ) {
         toast.error("Applicant name is required");
+        setIsSearching(false);
+
         return;
       }
       if (!fileType || fileType === 0) {
         toast.error("File Type is required");
+        setIsSearching(false);
+
         return;
       }
 
@@ -204,10 +228,14 @@ const ASearch = () => {
     } else if (searchtype === SearchType.VILLAGE_YEAR) {
       if (!year.current?.value || year.current?.value === "") {
         toast.error("Year is required");
+        setIsSearching(false);
+
         return;
       }
       if (!village || village === 0) {
         toast.error("Village is required");
+        setIsSearching(false);
+
         return;
       }
 
@@ -225,6 +253,7 @@ const ASearch = () => {
         toast.error(filesearch.message);
       }
     }
+    setIsSearching(false);
   };
 
   // ---------------search section----------------
@@ -293,12 +322,13 @@ const ASearch = () => {
 
   return (
     <div className="min-h-screen p-6 mx-auto bg-white">
-      <h1 className="text-center text-2xl font-medium">Search File Details</h1>
-
       {!search && (
         <div className=" h-full p-2 w-4/6 mx-auto  px-10">
+          <h1 className="text-center text-2xl font-medium">
+            Search File Details
+          </h1>
           <div className="flex gap-2 items-center mt-4">
-            <label htmlFor="fileid" className="w-40 text-right">
+            <label htmlFor="fileid" className="w-44 text-right">
               Select Criteria:
             </label>
             <div className="w-full">
@@ -358,7 +388,7 @@ const ASearch = () => {
           searchtype == SearchType.FILETEYPE_YEAR ||
           searchtype == SearchType.FILETYPE_USER ? (
             <div className="flex gap-2 items-center mt-4">
-              <label htmlFor="fileid" className="w-40 text-right">
+              <label htmlFor="fileid" className="w-44 text-right">
                 File Type :
               </label>
               <Select
@@ -390,7 +420,7 @@ const ASearch = () => {
           searchtype == SearchType.FILETYPE_VILLAGE ||
           searchtype == SearchType.VILLAGE_YEAR ? (
             <div className="flex gap-2 items-center mt-4">
-              <label htmlFor="fileid" className="w-40 text-right">
+              <label htmlFor="fileid" className="w-44 text-right">
                 Village :
               </label>
               <Select
@@ -418,7 +448,7 @@ const ASearch = () => {
           )}
           {searchtype === SearchType.VILLAGE_SURVAY && (
             <div className="flex gap-2 items-center  mt-4">
-              <label htmlFor="survey" className="w-40 text-right">
+              <label htmlFor="survey" className="w-44 text-right">
                 Survey Number :
               </label>
               <Input
@@ -433,7 +463,7 @@ const ASearch = () => {
           {searchtype === SearchType.VILLAGE_USER ||
           searchtype === SearchType.FILETYPE_USER ? (
             <div className="flex gap-2 items-center  mt-4">
-              <label htmlFor="name" className="w-40 text-right">
+              <label htmlFor="name" className="w-44 text-right">
                 Applicant Name :
               </label>
               <Input
@@ -450,7 +480,7 @@ const ASearch = () => {
           {searchtype === SearchType.FILETEYPE_YEAR ||
           searchtype == SearchType.VILLAGE_YEAR ? (
             <div className="flex gap-2 items-center  mt-4">
-              <label htmlFor="year" className="w-40 text-right">
+              <label htmlFor="year" className="w-44 text-right">
                 Year :
               </label>
               <Input
@@ -458,6 +488,7 @@ const ASearch = () => {
                 id="year"
                 name="year"
                 ref={year}
+                onChange={handleNumberChange}
               />
             </div>
           ) : (
@@ -466,18 +497,28 @@ const ASearch = () => {
 
           <div className="flex">
             <div className="grow"></div>
-            <Button
-              className="mt-4 bg-[#172e57] hover:bg-[#21437d]  w-40"
-              onClick={searchItems}
-            >
-              Search
-            </Button>
+
+            {isSearching ? (
+              <Button
+                className="mt-4 bg-[#172e57] hover:bg-[#21437d]  w-40"
+                onClick={searchItems}
+              >
+                Searching...
+              </Button>
+            ) : (
+              <Button
+                className="mt-4 bg-[#172e57] hover:bg-[#21437d]  w-40"
+                onClick={searchItems}
+              >
+                Search
+              </Button>
+            )}
           </div>
         </div>
       )}
 
       {search && (
-        <div className="mt-6">
+        <div className="mt-2">
           <CardHeader className="py-2 px-4 flex flex-row items-center gap-2">
             <h1 className="text-xl">Search Result</h1>
             <div className="grow"></div>
@@ -510,31 +551,55 @@ const ASearch = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[100px]">File Id</TableHead>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Survey Number</TableHead>
-                      <TableHead>Year</TableHead>
-                      <TableHead>File Type</TableHead>
-                      <TableHead>Village</TableHead>
-                      <TableHead>Action</TableHead>
+                      <TableHead className="w-[100px] text-sm font-normal p-2 px-4">
+                        File Id
+                      </TableHead>
+                      <TableHead className="text-sm font-normal p-2">
+                        Name
+                      </TableHead>
+                      <TableHead className="text-sm font-normal p-2">
+                        Survey Number
+                      </TableHead>
+                      <TableHead className="text-sm font-normal p-2">
+                        Year
+                      </TableHead>
+                      <TableHead className="text-sm font-normal p-2">
+                        File Type
+                      </TableHead>
+                      <TableHead className="text-sm font-normal p-2">
+                        Village
+                      </TableHead>
+                      <TableHead className="text-sm font-normal p-2">
+                        Action
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paginationsearch.paginatedItems.map((val: any) => (
                       <TableRow key={val.id}>
-                        <TableCell className="font-medium">
+                        <TableCell className="text-xs p-2 px-4">
                           {val.file_id}
                         </TableCell>
-                        <TableCell>{val.applicant_name}</TableCell>
-                        <TableCell>{val.survey_number}</TableCell>
-                        <TableCell>{val.year}</TableCell>
-                        <TableCell>{val.type.name}</TableCell>
-                        <TableCell>{val.village.name}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-xs p-2">
+                          {val.applicant_name}
+                        </TableCell>
+                        <TableCell className="text-xs p-2">
+                          {val.survey_number}
+                        </TableCell>
+                        <TableCell className="text-xs p-2">
+                          {val.year}
+                        </TableCell>
+                        <TableCell className="text-xs p-2">
+                          {val.type.name}
+                        </TableCell>
+                        <TableCell className="text-xs p-2">
+                          {val.village.name}
+                        </TableCell>
+                        <TableCell className="p-2">
                           <Link
                             target="_blank"
-                            className="py-1 px-4 bg-[#172f57] text-white text-lg rounded-md"
-                            href={`/dashboard/viewfile/${val.file_location}`}
+                            className="bg-[#172e57] text-xs text-white  py-1 px-2 rounded-md hover:bg-[#1a3561] transition-all duration-200 ease-in-out inline-block"
+                            href={`/dashboard/viewfile/${val.id}`}
                           >
                             View
                           </Link>
@@ -554,31 +619,53 @@ const ASearch = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">File Id</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Survey Number</TableHead>
-                    <TableHead>Year</TableHead>
-                    <TableHead>File Type</TableHead>
-                    <TableHead>Village</TableHead>
-                    <TableHead>Action</TableHead>
+                    <TableHead className="w-[100px] text-sm font-normal p-2 px-4">
+                      File Id
+                    </TableHead>
+                    <TableHead className="text-sm font-normal p-2">
+                      Name
+                    </TableHead>
+                    <TableHead className="text-sm font-normal p-2">
+                      Survey Number
+                    </TableHead>
+                    <TableHead className="text-sm font-normal p-2">
+                      Year
+                    </TableHead>
+                    <TableHead className="text-sm font-normal p-2">
+                      File Type
+                    </TableHead>
+                    <TableHead className="text-sm font-normal p-2">
+                      Village
+                    </TableHead>
+                    <TableHead className="text-sm font-normal p-2">
+                      Action
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {pagination.paginatedItems.map((val: any) => (
                     <TableRow key={val.id}>
-                      <TableCell className="font-medium">
+                      <TableCell className="text-xs p-2 px-4">
                         {val.file_id}
                       </TableCell>
-                      <TableCell>{val.applicant_name}</TableCell>
-                      <TableCell>{val.survey_number}</TableCell>
-                      <TableCell>{val.year}</TableCell>
-                      <TableCell>{val.type.name}</TableCell>
-                      <TableCell>{val.village.name}</TableCell>
-                      <TableCell>
+                      <TableCell className="text-xs p-2">
+                        {val.applicant_name}
+                      </TableCell>
+                      <TableCell className="text-xs p-2">
+                        {val.survey_number}
+                      </TableCell>
+                      <TableCell className="text-xs p-2">{val.year}</TableCell>
+                      <TableCell className="text-xs p-2">
+                        {val.type.name}
+                      </TableCell>
+                      <TableCell className="text-xs p-2">
+                        {val.village.name}
+                      </TableCell>
+                      <TableCell className="p-2">
                         <Link
                           target="_blank"
-                          className="py-1 px-4 bg-[#172f57] text-white text-lg rounded-md"
-                          href={`/dashboard/viewfile/${val.file_location}`}
+                          className="bg-[#172e57] text-xs text-white  py-1 px-2 rounded-md hover:bg-[#1a3561] transition-all duration-200 ease-in-out inline-block"
+                          href={`/dashboard/viewfile/${val.id}`}
                         >
                           View
                         </Link>

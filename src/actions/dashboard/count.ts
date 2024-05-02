@@ -13,7 +13,7 @@ const DashBoardCount = async (
     const villagecout = await prisma.village.count();
     const typecout = await prisma.file_type.count();
     const filecout = await prisma.file.count();
-    const pagecount = 537256;
+    const pagecount = 737256;
 
     const response = {
       village: villagecout,
