@@ -66,7 +66,7 @@ const HomeForm = (props: HomeProps) => {
       setLoading(false);
     };
     init();
-  }, [props.id]);
+  }, [props.id, router, props.role]);
 
   const [year, setYear] = useState<string>("2000");
 
@@ -323,10 +323,10 @@ const InputCard = (props: InputCardProps) => {
         <Fa6SolidCirclePlus
           className="text-xl cursor-pointer text-green-500"
           onClick={() => {
-            if (props.values.length > 10) {
-              toast.error("You can add only 10 names");
-              return;
-            }
+            // if (props.values.length > 10) {
+            //   toast.error("You can add only 10 names");
+            //   return;
+            // }
 
             if (props.values[props.values.length - 1] === "") {
               toast.error("Please fill the previous name");

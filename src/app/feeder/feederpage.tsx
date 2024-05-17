@@ -405,7 +405,6 @@ const LocationBox = (props: LocationBoxProps) => {
   const [shelf_number, setShelfNumber] = useState<physical_file_location[]>([]);
 
   useEffect(() => {
-    console.log(props);
     const init = async () => {
       const file_location = await GetCupboardNumber({});
       if (file_location.status) {
@@ -608,8 +607,6 @@ const LocationToFile = (props: { userid: number }) => {
                 const shelf_number = alllocation.data?.filter(
                   (value) => value.cupboard_numer?.toString() == val.toString()
                 );
-
-                console.log(shelf_number);
                 setShelfNumber(shelf_number!);
               }
             }}

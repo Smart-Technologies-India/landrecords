@@ -10,7 +10,11 @@ const getVillage = async (
   payload: GetVillagePayload
 ): Promise<ApiResponseType<village[] | null>> => {
   try {
-    const village = await prisma.village.findMany({});
+    const village = await prisma.village.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
 
     if (!village)
       return {

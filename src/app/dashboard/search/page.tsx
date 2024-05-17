@@ -28,6 +28,7 @@ import { usePagination } from "@/hooks/usepagination";
 import { ApiResponseType } from "@/models/response";
 import { handleNumberChange } from "@/utils/methods";
 import { file, file_type, user, village } from "@prisma/client";
+
 import Link from "next/link";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -71,6 +72,8 @@ const Search = () => {
   const year = useRef<HTMLInputElement>(null);
   const fileref = useRef<HTMLInputElement>(null);
   // const remark = useRef<HTMLTextAreaElement>(null);
+  const villageRef = useRef<HTMLSelectElement>(null);
+  const typeRef = useRef<HTMLSelectElement>(null);
 
   const searchItems = async () => {
     setIsSearching(true);
@@ -90,13 +93,19 @@ const Search = () => {
     }
 
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
-      file_no: file_no.current?.value,
-      file_id: file_id.current?.value,
-      applicant_name: applicant_name.current?.value,
-      survey_number: survey.current?.value,
-      year: year.current?.value,
-      typeId: fileType,
-      villageId: village,
+      file_no:
+        file_no.current?.value == "" ? undefined : file_no.current?.value,
+      file_id:
+        file_id.current?.value == "" ? undefined : file_id.current?.value,
+      applicant_name:
+        applicant_name.current?.value == ""
+          ? undefined
+          : applicant_name.current?.value,
+      survey_number:
+        survey.current?.value == "" ? undefined : survey.current?.value,
+      year: year.current?.value == "" ? undefined : year.current?.value,
+      typeId: fileType == 0 ? undefined : fileType,
+      villageId: village == 0 ? undefined : village,
     });
 
     if (filesearch.status) {
@@ -107,6 +116,10 @@ const Search = () => {
       toast.error(filesearch.message);
     }
     setIsSearching(false);
+  };
+
+  const clearSearch = async () => {
+    window.location.reload();
   };
 
   // ---------------search section----------------
@@ -192,7 +205,7 @@ const Search = () => {
               setFileType(parseInt(val));
             }}
           >
-            <SelectTrigger className="">
+            <SelectTrigger>
               <SelectValue placeholder="Select File Type" />
             </SelectTrigger>
             <SelectContent>
@@ -209,10 +222,10 @@ const Search = () => {
         </div>
         <div className="flex gap-2 items-center mt-4">
           <label htmlFor="file_id" className="w-60">
-            File Id :
+            New File Id :
           </label>
           <Input
-            placeholder="Enter File ID"
+            placeholder="Enter New File ID"
             id="file_id"
             name="file_id"
             ref={file_id}
@@ -261,10 +274,10 @@ const Search = () => {
         </div>
         <div className="flex gap-2 items-center  mt-4">
           <label htmlFor="name" className="w-60">
-            Applicant Name :
+            Name :
           </label>
           <Input
-            placeholder="Enter Applicant Name"
+            placeholder="Enter Name"
             id="applicant_name"
             name="applicant_name"
             ref={applicant_name}
@@ -295,9 +308,14 @@ const Search = () => {
             ref={fileref}
           />
         </div>
-
-        <div className="flex">
+        <div className="flex gap-4">
           <div className="grow"></div>
+          <Button
+            className="w-40 mt-4 bg-red-500 hover:bg-red-600"
+            onClick={clearSearch}
+          >
+            Clear Search
+          </Button>
           {isSearching ? (
             <Button
               className="w-40 mt-4 bg-[#172e57] hover:bg-[#21437d]"

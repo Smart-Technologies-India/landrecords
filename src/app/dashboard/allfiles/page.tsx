@@ -27,6 +27,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import type { KeyboardEvent } from "react";
 import { set } from "valibot";
+import Link from "next/link";
 
 const AllFiles = () => {
   // paginated section start from here
@@ -280,14 +281,13 @@ const AllFiles = () => {
                     {val.village.name}
                   </TableCell>
                   <TableCell className="p-2">
-                    <button
+                    <Link
+                      target="_blank"
+                      href={`/dashboard/viewfile/${val.id}`}
                       className="bg-[#172e57] text-xs text-white  py-1 px-2 rounded-md hover:bg-[#1a3561] transition-all duration-200 ease-in-out"
-                      onClick={() =>
-                        router.push(`/dashboard/viewfile/${val.id}`)
-                      }
                     >
                       View
-                    </button>
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}
