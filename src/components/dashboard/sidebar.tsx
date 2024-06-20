@@ -48,7 +48,7 @@ const Sidebar = (props: SidebarProps) => {
       }  transition-transform duration-300 ease-in-out`}
     >
       <p className="text-xl font-semibold text-white text-center">
-        Bhoomi Bandhu
+        Land Reforms DNH
       </p>
       <div className="h-4"></div>
 

@@ -30,7 +30,6 @@ export default function Home() {
         username: result.output.username,
       });
 
-
       if (registerrespone.status) {
         if (registerrespone.data?.role === "ADMIN") {
           router.push("/search");
@@ -64,7 +63,7 @@ export default function Home() {
           <div></div>
           <div>
             <p className="text-white text-3xl text-center leading-relaxed font-bold">
-              BhoomiBandhu-DNH
+              Land Reforms DNH
             </p>
             <p className="text-white text-sm text-center font-medium">
               Preserving the Past, Securing the Future

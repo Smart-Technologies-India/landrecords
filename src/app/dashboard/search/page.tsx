@@ -72,8 +72,8 @@ const Search = () => {
   const year = useRef<HTMLInputElement>(null);
   const fileref = useRef<HTMLInputElement>(null);
   // const remark = useRef<HTMLTextAreaElement>(null);
-  const villageRef = useRef<HTMLSelectElement>(null);
-  const typeRef = useRef<HTMLSelectElement>(null);
+  // const villageRef = useRef<HTMLSelectElement>(null);
+  // const typeRef = useRef<HTMLSelectElement>(null);
 
   const searchItems = async () => {
     setIsSearching(true);
@@ -106,6 +106,8 @@ const Search = () => {
       year: year.current?.value == "" ? undefined : year.current?.value,
       typeId: fileType == 0 ? undefined : fileType,
       villageId: village == 0 ? undefined : village,
+      file_ref:
+        fileref.current?.value == "" ? undefined : fileref.current?.value,
     });
 
     if (filesearch.status) {

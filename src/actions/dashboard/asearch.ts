@@ -363,9 +363,7 @@ const ASearchFile = async (
       // done
       const search_files = await prisma.file_survey.findMany({
         where: {
-          survey_number: {
-            contains: payload.survey_number,
-          },
+          survey_number: payload.survey_number,
         },
         include: {
           file: {
@@ -379,9 +377,7 @@ const ASearchFile = async (
 
       const search_files2 = await prisma.file.findMany({
         where: {
-          survey_number: {
-            contains: payload.survey_number,
-          },
+          survey_number: payload.survey_number,
         },
         include: {
           type: true,

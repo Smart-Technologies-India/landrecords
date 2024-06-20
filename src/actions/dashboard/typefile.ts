@@ -14,6 +14,9 @@ const TypesFile = async (
     // get all types with file count of each types files
 
     const file_type = await prisma.file_type.findMany({
+      where: {
+        deletedAt: null,
+      },
       include: {
         file: {
           select: {

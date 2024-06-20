@@ -10,7 +10,11 @@ const villageFileType = async (
   payload: villageFileTypePayload
 ): Promise<ApiResponseType<any | null>> => {
   try {
-    const file = await prisma.file.findMany();
+    const file = await prisma.file.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
 
     if (!file) {
       return {
@@ -21,7 +25,11 @@ const villageFileType = async (
       };
     }
 
-    const filetype = await prisma.file_type.findMany();
+    const filetype = await prisma.file_type.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
 
     if (!filetype) {
       return {
@@ -61,7 +69,11 @@ const villageFileType = async (
 
     filetypelist = filetypelist.slice(0, 5);
 
-    const villages = await prisma.village.findMany({});
+    const villages = await prisma.village.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
 
     interface villlagelist {
       id: number;

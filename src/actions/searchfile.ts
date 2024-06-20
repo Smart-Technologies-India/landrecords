@@ -24,13 +24,12 @@ const fileSearch = async (
   try {
     let files: file[] = [];
 
-
     const searchfile = await prisma.file.findMany({
       where: {
         ...(payload.file_no && { file_no: payload.file_no }),
         ...(payload.file_id && { file_id: payload.file_id }),
         ...(payload.applicant_name && {
-          some: { applicant_name: { contains: payload.applicant_name } },
+          applicant_name: { contains: payload.applicant_name },
         }),
         ...(payload.survey_number && { survey_number: payload.survey_number }),
         ...(payload.year && { year: parseInt(payload.year) }),
@@ -43,7 +42,7 @@ const fileSearch = async (
           villageId: parseInt(payload.villageId.toString() ?? "0"),
         }),
         ...(payload.file_ref && {
-          some: { file_ref: { contains: payload.file_ref } },
+          remarks: { contains: payload.file_ref },
         }),
       },
       include: {
@@ -52,9 +51,8 @@ const fileSearch = async (
       },
     });
 
-
     if (searchfile) {
-      files = [...files, ...searchfile];
+      files = [...searchfile];
     }
 
     // search date
@@ -89,22 +87,29 @@ const fileSearch = async (
       if (payload.remarks) data_to_search.remarks = payload.remarks;
       if (payload.typeId) data_to_search.typeId = payload.typeId;
       if (payload.villageId) data_to_search.villageId = payload.villageId;
-      if (payload.file_ref) data_to_search.file_ref = payload.file_ref;
 
       const matchfiles = newfiles.filter((f: any) => {
         let match = false;
         for (const key in data_to_search) {
-          if (f[key] === data_to_search[key]) {
+          if (
+            f[key]
+              .toString()
+              .toLowerCase()
+              .includes(data_to_search[key].toString().toLowerCase())
+          ) {
             match = true;
           } else {
             match = false;
             break;
           }
+          return match;
         }
       });
 
-      if (matchfiles) {
-        files = [...files, ...matchfiles];
+      if (Object.keys(data_to_search).length > 0) {
+        files = matchfiles;
+      } else {
+        files = [...files, ...newfiles];
       }
     }
 
@@ -142,22 +147,28 @@ const fileSearch = async (
       if (payload.remarks) data_to_search.remarks = payload.remarks;
       if (payload.typeId) data_to_search.typeId = payload.typeId;
       if (payload.villageId) data_to_search.villageId = payload.villageId;
-      if (payload.file_ref) data_to_search.file_ref = payload.file_ref;
 
       const matchfiles = newfiles.filter((f: any) => {
         let match = false;
         for (const key in data_to_search) {
-          if (f[key] === data_to_search[key]) {
+          if (
+            f[key]
+              .toString()
+              .toLowerCase()
+              .includes(data_to_search[key].toString().toLowerCase())
+          ) {
             match = true;
           } else {
             match = false;
             break;
           }
         }
+        return match;
       });
-
-      if (matchfiles) {
-        files = [...files, ...matchfiles];
+      if (Object.keys(data_to_search).length > 0) {
+        files = matchfiles;
+      } else {
+        files = [...files, ...newfiles];
       }
     }
 
@@ -193,22 +204,30 @@ const fileSearch = async (
       if (payload.remarks) data_to_search.remarks = payload.remarks;
       if (payload.typeId) data_to_search.typeId = payload.typeId;
       if (payload.villageId) data_to_search.villageId = payload.villageId;
-      if (payload.file_ref) data_to_search.file_ref = payload.file_ref;
 
       const matchfiles = newfiles.filter((f: any) => {
         let match = false;
         for (const key in data_to_search) {
-          if (f[key] === data_to_search[key]) {
+          if (
+            f[key]
+              .toString()
+              .toLowerCase()
+              .includes(data_to_search[key].toString().toLowerCase())
+          ) {
             match = true;
           } else {
             match = false;
             break;
           }
         }
+        return match;
       });
 
-      if (matchfiles) {
-        files = [...files, ...matchfiles];
+      if (Object.keys(data_to_search).length > 0) {
+        // files = [...files, ...matchfiles];
+        files = matchfiles;
+      } else {
+        files = [...files, ...newfiles];
       }
     }
 
@@ -244,22 +263,29 @@ const fileSearch = async (
       if (payload.remarks) data_to_search.remarks = payload.remarks;
       if (payload.typeId) data_to_search.typeId = payload.typeId;
       if (payload.villageId) data_to_search.villageId = payload.villageId;
-      if (payload.file_ref) data_to_search.file_ref = payload.file_ref;
 
       const matchfiles = newfiles.filter((f: any) => {
         let match = false;
         for (const key in data_to_search) {
-          if (f[key] === data_to_search[key]) {
+          if (
+            f[key]
+              .toString()
+              .toLowerCase()
+              .includes(data_to_search[key].toString().toLowerCase())
+          ) {
             match = true;
           } else {
             match = false;
             break;
           }
         }
+        return match;
       });
 
-      if (matchfiles) {
-        files = [...files, ...matchfiles];
+      if (Object.keys(data_to_search).length > 0) {
+        files = matchfiles;
+      } else {
+        files = [...files, ...newfiles];
       }
     }
 

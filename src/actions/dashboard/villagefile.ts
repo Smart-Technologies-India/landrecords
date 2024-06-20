@@ -5,7 +5,6 @@ import prisma from "../../../prisma/database";
 import { ApiResponseType } from "@/models/response";
 import { village } from "@prisma/client";
 
-
 interface VillagesFilePayload {}
 
 const VillagesFile = async (
@@ -21,6 +20,9 @@ const VillagesFile = async (
             id: true,
           },
         },
+      },
+      orderBy: {
+        name: "asc",
       },
     });
 

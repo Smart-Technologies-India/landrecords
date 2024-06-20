@@ -21,7 +21,7 @@ import {
 import VillagesFile from "@/actions/dashboard/villagefile";
 import TypesFile from "@/actions/dashboard/typefile";
 import YearsFileType from "@/actions/dashboard/yearsfiletypes";
-import { constants } from "buffer";
+import { constants, kMaxLength } from "buffer";
 import villageFileType from "@/actions/dashboard/villagesfiletypes";
 import Link from "next/link";
 import Pagination from "@/components/pagination";
@@ -104,7 +104,14 @@ const Dashboard = () => {
 
       const typessfile = await TypesFile({});
       if (typessfile.status) {
-        setTypeFile(typessfile.data!);
+        let data: any[] = typessfile.data!;
+
+        data.sort((a, b) => {
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
+        });
+        setTypeFile(data);
       }
 
       const years_filetypes = await YearsFileType({});
@@ -114,7 +121,15 @@ const Dashboard = () => {
 
       const village_type = await villageFileType({});
       if (village_type.status) {
-        setVillageType(village_type.data!);
+        let data: any[] = village_type.data!;
+
+        data.sort((a, b) => {
+          if (a.village < b.village) return -1;
+          if (a.village > b.village) return 1;
+          return 0;
+        });
+
+        setVillageType(data);
       }
 
       setLoading(false);

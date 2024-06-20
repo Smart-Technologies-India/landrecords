@@ -10,7 +10,11 @@ const YearsFileType = async (
   payload: YearsFileTypePayload
 ): Promise<ApiResponseType<any | null>> => {
   try {
-    const file = await prisma.file.findMany();
+    const file = await prisma.file.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
 
     if (!file) {
       return {
@@ -48,7 +52,11 @@ const YearsFileType = async (
     // sort accourding to year
     years.sort((a, b) => a.year - b.year);
 
-    const filetype = await prisma.file_type.findMany();
+    const filetype = await prisma.file_type.findMany({
+      where: {
+        deletedAt: null,
+      },
+    });
 
     if (!filetype) {
       return {
