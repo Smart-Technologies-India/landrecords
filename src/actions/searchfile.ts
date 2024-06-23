@@ -44,6 +44,7 @@ const fileSearch = async (
         ...(payload.file_ref && {
           remarks: { contains: payload.file_ref },
         }),
+        deletedAt: null,
       },
       include: {
         type: true,
@@ -59,6 +60,7 @@ const fileSearch = async (
     if (payload.dates) {
       const dates = await prisma.file_dates.findMany({
         where: {
+          deletedAt: null,
           dates: {
             contains: payload.dates,
           },
@@ -118,6 +120,7 @@ const fileSearch = async (
     if (payload.applicant_name) {
       const name = await prisma.file_name.findMany({
         where: {
+          deletedAt: null,
           name: {
             contains: payload.applicant_name,
           },
@@ -176,6 +179,7 @@ const fileSearch = async (
     if (payload.survey_number) {
       const surveyfiles = await prisma.file_survey.findMany({
         where: {
+          deletedAt: null,
           survey_number: {
             contains: payload.survey_number,
           },
@@ -235,6 +239,7 @@ const fileSearch = async (
     if (payload.file_ref) {
       const file_ref = await prisma.file_ref.findMany({
         where: {
+          deletedAt: null,
           file_ref: {
             contains: payload.file_ref,
           },

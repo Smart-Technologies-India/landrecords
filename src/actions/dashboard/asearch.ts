@@ -38,6 +38,7 @@ const ASearchFile = async (
     if (payload.year) {
       const year = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           year: parseInt(payload.year),
         },
         include: {
@@ -55,6 +56,7 @@ const ASearchFile = async (
     if (payload.file_no) {
       const file_no = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           file_no: payload.file_no,
         },
         include: {
@@ -71,6 +73,7 @@ const ASearchFile = async (
     if (payload.file_id) {
       const file_id = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           file_id: payload.file_id,
         },
         include: {
@@ -88,6 +91,7 @@ const ASearchFile = async (
     if (payload.aadhar) {
       const aadhar = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           aadhar: payload.aadhar,
         },
         include: {
@@ -105,6 +109,7 @@ const ASearchFile = async (
     if (payload.remarks) {
       const remarks = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           remarks: {
             contains: payload.remarks,
           },
@@ -125,6 +130,7 @@ const ASearchFile = async (
     if (payload.typeId) {
       const type = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           typeId: parseInt(payload.typeId.toString() ?? "0"),
         },
         include: {
@@ -142,6 +148,7 @@ const ASearchFile = async (
     if (payload.villageId) {
       const village = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           villageId: parseInt(payload.villageId.toString() ?? "0"),
         },
         include: {
@@ -159,6 +166,7 @@ const ASearchFile = async (
     if (payload.dates) {
       const dates = await prisma.file_dates.findMany({
         where: {
+          deletedAt: null,
           dates: {
             contains: payload.dates,
           },
@@ -183,6 +191,7 @@ const ASearchFile = async (
     if (payload.applicant_name) {
       const filename = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           applicant_name: {
             contains: payload.applicant_name,
           },
@@ -199,6 +208,7 @@ const ASearchFile = async (
 
       const name = await prisma.file_name.findMany({
         where: {
+          deletedAt: null,
           name: {
             contains: payload.applicant_name,
           },
@@ -221,6 +231,7 @@ const ASearchFile = async (
     if (payload.survey_number) {
       const surveyfiles = await prisma.file_survey.findMany({
         where: {
+          deletedAt: null,
           survey_number: {
             contains: payload.survey_number,
           },
@@ -241,6 +252,7 @@ const ASearchFile = async (
 
       const survey = await prisma.file_survey.findMany({
         where: {
+          deletedAt: null,
           survey_number: {
             contains: payload.survey_number,
           },
@@ -264,6 +276,7 @@ const ASearchFile = async (
     if (payload.file_ref) {
       const file_ref = await prisma.file_ref.findMany({
         where: {
+          deletedAt: null,
           file_ref: {
             contains: payload.file_ref,
           },
@@ -287,6 +300,7 @@ const ASearchFile = async (
       // done
       const search_files = await prisma.file_name.findMany({
         where: {
+          deletedAt: null,
           name: {
             contains: payload.applicant_name,
           },
@@ -303,6 +317,7 @@ const ASearchFile = async (
 
       const search_files2 = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           applicant_name: {
             contains: payload.applicant_name,
           },
@@ -328,6 +343,7 @@ const ASearchFile = async (
       // done
       const search_files = await prisma.file_name.findMany({
         where: {
+          deletedAt: null,
           name: {
             contains: payload.applicant_name,
           },
@@ -344,6 +360,7 @@ const ASearchFile = async (
 
       const search_files2 = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           applicant_name: {
             contains: payload.applicant_name,
           },
@@ -363,6 +380,7 @@ const ASearchFile = async (
       // done
       const search_files = await prisma.file_survey.findMany({
         where: {
+          deletedAt: null,
           survey_number: payload.survey_number,
         },
         include: {
@@ -377,6 +395,7 @@ const ASearchFile = async (
 
       const search_files2 = await prisma.file.findMany({
         where: {
+          deletedAt: null,
           survey_number: payload.survey_number,
         },
         include: {
