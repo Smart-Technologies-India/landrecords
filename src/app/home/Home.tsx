@@ -328,10 +328,10 @@ const InputCard = (props: InputCardProps) => {
             //   return;
             // }
 
-            if (props.values[props.values.length - 1] === "") {
-              toast.error("Please fill the previous name");
-              return;
-            }
+            // if (props.values[props.values.length - 1] === "") {
+            //   toast.error("Please fill the previous name");
+            //   return;
+            // }
             props.setvalue((val) => [...val, ""]);
           }}
         />

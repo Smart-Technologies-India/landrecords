@@ -11,6 +11,9 @@ const getVillage = async (
 ): Promise<ApiResponseType<village[] | null>> => {
   try {
     const village = await prisma.village.findMany({
+      where: {
+        deletedAt: null,
+      },
       orderBy: {
         name: "asc",
       },

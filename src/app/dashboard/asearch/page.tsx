@@ -32,7 +32,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { is } from "valibot";
 
 const ASearch = () => {
   const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -364,7 +363,7 @@ const ASearch = () => {
                       File Type/Year
                     </SelectItem>
                     <SelectItem value={SearchType.VILLAGE_USER.toString()}>
-                      Village/User
+                      Village/Applicant Name
                     </SelectItem>
                     <SelectItem value={SearchType.VILLAGE_SURVAY.toString()}>
                       Village/Survey
@@ -373,7 +372,7 @@ const ASearch = () => {
                       File Type/Village
                     </SelectItem>
                     <SelectItem value={SearchType.FILETYPE_USER.toString()}>
-                      File Type/User
+                      File Type/Applicant Name
                     </SelectItem>
                     <SelectItem value={SearchType.VILLAGE_YEAR.toString()}>
                       Village/Year

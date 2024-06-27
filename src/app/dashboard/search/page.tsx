@@ -207,7 +207,7 @@ const Search = () => {
               setFileType(parseInt(val));
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className="data-[placeholder]:text-gray-300">
               <SelectValue placeholder="Select File Type" />
             </SelectTrigger>
             <SelectContent>
@@ -231,6 +231,7 @@ const Search = () => {
             id="file_id"
             name="file_id"
             ref={file_id}
+            className="placeholder:text-gray-300"
           />
         </div>
         <div className="flex gap-2 items-center mt-4">
@@ -242,6 +243,7 @@ const Search = () => {
             id="file_no"
             name="file_no"
             ref={file_no}
+            className="placeholder:text-gray-300"
           />
         </div>
         <div className="flex gap-2 items-center mt-4">
@@ -253,7 +255,7 @@ const Search = () => {
               setVillage(parseInt(val));
             }}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="data-[placeholder]:text-gray-300">
               <SelectValue placeholder="Select Village" />
             </SelectTrigger>
             <SelectContent>
@@ -272,7 +274,13 @@ const Search = () => {
           <label htmlFor="survey" className="w-60">
             Survey Number :
           </label>
-          <Input placeholder="survey" id="survey" name="survey" ref={survey} />
+          <Input
+            placeholder="Survey Number"
+            className="placeholder:text-gray-300"
+            id="survey"
+            name="survey"
+            ref={survey}
+          />
         </div>
         <div className="flex gap-2 items-center  mt-4">
           <label htmlFor="name" className="w-60">
@@ -283,6 +291,7 @@ const Search = () => {
             id="applicant_name"
             name="applicant_name"
             ref={applicant_name}
+            className="placeholder:text-gray-300"
           />
         </div>
 
@@ -292,10 +301,11 @@ const Search = () => {
           </label>
           <Input
             onChange={handleNumberChange}
-            placeholder="year"
+            placeholder="Year"
             id="year"
             name="year"
             ref={year}
+            className="placeholder:text-gray-300"
           />
         </div>
 
@@ -308,6 +318,7 @@ const Search = () => {
             id="fileref"
             name="fileref"
             ref={fileref}
+            className="placeholder:text-gray-300"
           />
         </div>
         <div className="flex gap-4">

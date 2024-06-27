@@ -10,7 +10,14 @@ const getFileType = async (
   payload: GetFileTypePayload
 ): Promise<ApiResponseType<file_type[] | null>> => {
   try {
-    const file_type = await prisma.file_type.findMany({});
+    const file_type = await prisma.file_type.findMany({
+      where: {
+        deletedAt: null,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
 
     if (!file_type)
       return {

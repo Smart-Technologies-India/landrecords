@@ -71,6 +71,9 @@ dependencies:
   react:
     specifier: ^18
     version: 18.2.0
+  react-beforeunload:
+    specifier: ^2.6.0
+    version: 2.6.0(react@18.2.0)
   react-chartjs-2:
     specifier: ^5.2.0
     version: 5.2.0(chart.js@4.4.2)(react@18.2.0)
@@ -109,6 +112,9 @@ devDependencies:
   '@types/react':
     specifier: ^18
     version: 18.2.54
+  '@types/react-beforeunload':
+    specifier: ^2.1.5
+    version: 2.1.5
   '@types/react-dom':
     specifier: ^18
     version: 18.2.18
@@ -1448,6 +1454,12 @@ packages:
 
   /@types/prop-types@15.7.11:
     resolution: {integrity: sha512-ga8y9v9uyeiLdpKddhxYQkxNDrfvuPrlFb0N1qnZZByvcElJaXthF1UhvCh9TLWJBEHeNtdnbysW7Y6Uq8CVng==}
+
+  /@types/react-beforeunload@2.1.5:
+    resolution: {integrity: sha512-xrczkBsJ26lidA/Y/Oln0lYgux79KUkpomaOdnQFPRV9Sx1Mgx53RkYsgZ234HG1ZMKGCmzpk7jO5T4h3bmjvg==}
+    dependencies:
+      '@types/react': 18.2.54
+    dev: true
 
   /@types/react-dom@18.2.18:
     resolution: {integrity: sha512-TJxDm6OfAX2KJWJdMEVTwWke5Sc/E/RlnPGvGfS0W7+6ocy2xhDVQVh/KvC2Uf7kACs+gDytdusDSdWfWkaNzw==}
@@ -3938,6 +3950,14 @@ packages:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       unpipe: 1.0.0
+    dev: false
+
+  /react-beforeunload@2.6.0(react@18.2.0):
+    resolution: {integrity: sha512-aKrGaRNc7fZQlDnmSYrXu4cbz9QEPhScA4A2mLxhjcULDy4VILLyLhSEjg2goIw3o5LQ1zss44kmQh5LXWYGCw==}
+    peerDependencies:
+      react: ^16.8.0 || 17 || 18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-chartjs-2@5.2.0(chart.js@4.4.2)(react@18.2.0):
