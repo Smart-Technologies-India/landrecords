@@ -46,9 +46,9 @@ export default function RootLayout({
     return () => clearInterval(interval);
   }, []);
 
-  useBeforeunload(() => {
-    logoutAction();
-  });
+  // useBeforeunload(() => {
+  //   logoutAction();
+  // });
 
   // update expire time on any user activity
   useEffect(() => {

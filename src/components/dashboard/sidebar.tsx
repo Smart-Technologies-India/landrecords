@@ -5,6 +5,7 @@ import {
   FluentMdl2Home,
   FluentMdl2Search,
   FluentMdl2ViewDashboard,
+  FluentSlideSearch32Regular,
   GgAlbum,
   GgSearch,
   IcBaselineAccountCircle,
@@ -76,6 +77,12 @@ const Sidebar = (props: SidebarProps) => {
         name="Advance Search"
         path={path}
         pathcheck={"/dashboard/search"}
+      />
+      <MenuTab
+        icco={<FluentSlideSearch32Regular className="text-gray-300  w-6" />}
+        name="Open Search"
+        path={path}
+        pathcheck={"/dashboard/searchmatch"}
       />
 
       <div className="grow"></div>
