@@ -76,6 +76,7 @@ const SearchAdmin = (props: HomeProps) => {
   const [fileType, setFileType] = useState<number>(0);
   const [village, setVillage] = useState<number>(0);
 
+  const file_id = useRef<HTMLInputElement>(null);
   const file_no = useRef<HTMLInputElement>(null);
   const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
@@ -87,6 +88,7 @@ const SearchAdmin = (props: HomeProps) => {
 
   const search = async () => {
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
+      file_id: file_id.current?.value,
       file_no: file_no.current?.value,
       applicant_name: applicant_name.current?.value,
       survey_number: survey.current?.value,
@@ -135,6 +137,17 @@ const SearchAdmin = (props: HomeProps) => {
         <h1 className="text-center text-2xl font-medium">
           Search File Details
         </h1>
+        <div className="flex gap-2 items-center mt-4">
+          <label htmlFor="file_id" className="w-60">
+            File Id :
+          </label>
+          <Input
+            placeholder="Enter File Id"
+            id="file_id"
+            name="file_id"
+            ref={file_id}
+          />
+        </div>
         <div className="flex gap-2 items-center mt-4">
           <label htmlFor="file_no" className="w-60">
             File No :
