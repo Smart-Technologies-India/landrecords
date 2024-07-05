@@ -137,6 +137,7 @@ const ViewFile = (props: ViewFileProps) => {
         surveyNumbers: Array.from(surveyset),
         referenceNumbers: Array.from(referenceset),
         dates: Array.from(datesset),
+        ...(remark.current!.value && { remarks: remark.current!.value }),
       });
 
       if (filesubmit.status) {
