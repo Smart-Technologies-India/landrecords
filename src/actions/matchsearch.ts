@@ -105,15 +105,9 @@ const MatchSearch = async (
 
       const file = fileMap.get(file_id);
       if (file) {
-        // Push the file reference to the file_ref array
         file.file_ref.push(file_ref);
       }
 
-      //   const file: any[] = files.filter((file: any) => file.id == file_id);
-      //   file[0].file_ref.push(file_ref);
-
-      //   const expectfiles = files.filter((file: any) => file.id != file_id);
-      //   files = [...expectfiles, ...file];
     }
 
     for (let i = 0; i < filenameresponse.length; i++) {

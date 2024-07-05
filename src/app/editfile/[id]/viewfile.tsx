@@ -338,15 +338,16 @@ const ViewFile = (props: ViewFileProps) => {
         <Separator />
         <div className="flex gap-4 mt-4 w-full flex-wrap">
           <InputCard title="Name" values={names} setvalue={setNames} />
-          <InputCard
-            title="Survey Numbers"
-            values={surveyNumbers}
-            setvalue={setSurveyNumbers}
-          />
+
           <InputCard
             title="Reference Numbers"
             values={referenceNumbers}
             setvalue={setReferenceNumbers}
+          />
+          <InputCard
+            title="Survey Numbers"
+            values={surveyNumbers}
+            setvalue={setSurveyNumbers}
           />
           <InputCard title="Dates" values={dates} setvalue={setDates} />
         </div>
