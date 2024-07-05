@@ -86,8 +86,6 @@ const SearchAdmin = (props: HomeProps) => {
   const remark = useRef<HTMLTextAreaElement>(null);
 
   const search = async () => {
- 
-
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
       file_no: file_no.current?.value,
       applicant_name: applicant_name.current?.value,
@@ -298,11 +296,17 @@ const SearchAdmin = (props: HomeProps) => {
                     <TableCell>{val.year}</TableCell>
                     <TableCell>{val.type.name}</TableCell>
                     <TableCell>{val.village.name}</TableCell>
-                    <TableCell>
+                    <TableCell className="flex">
                       <Button
                         onClick={() => router.push(`/viewfile/${val.id}`)}
                       >
                         View
+                      </Button>
+                      <div className="w-4"></div>
+                      <Button
+                        onClick={() => router.push(`/editfile/${val.id}`)}
+                      >
+                        Edit
                       </Button>
                     </TableCell>
                   </TableRow>
