@@ -26,6 +26,7 @@ import { revalidatePath } from "next/cache";
 const updateFile = async (
   payload: updateFilePayload
 ): Promise<ApiResponseType<file | null>> => {
+  console.log(payload);
   try {
     const isexist = await prisma.file.findFirst({
       where: { id: parseInt(payload.id.toString()) },
@@ -52,7 +53,7 @@ const updateFile = async (
     if (payload.villageId) data_to_update.villageId = payload.villageId;
     if (payload.userId) data_to_update.userId = payload.userId;
     if (payload.aadhar) data_to_update.aadhar = payload.aadhar;
-    if (payload.userId) data_to_update.remarks = payload.remarks;
+    if (payload.remarks) data_to_update.remarks = payload.remarks;
 
     const file: file = await prisma.file.update({
       where: {

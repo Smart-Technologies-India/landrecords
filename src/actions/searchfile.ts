@@ -23,7 +23,6 @@ const fileSearch = async (
   payload: SearchFilePayload
 ): Promise<ApiResponseType<file[] | null>> => {
   try {
-    console.log(payload);
     let files: any[] = [];
 
     const fileresponse = await prisma.file.findMany({
