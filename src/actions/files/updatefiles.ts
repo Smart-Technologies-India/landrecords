@@ -67,7 +67,6 @@ const updateFile = async (
           where: {
             fileId: isexist.id,
             survey_number: payload.surveyNumbers[i],
-            villageId: payload.villageId!,
           },
         });
 
@@ -193,7 +192,6 @@ const updateFile = async (
           where: {
             fileId: file.id,
             survey_number: payload.surveyNumbers[i],
-            villageId: payload.villageId!,
           },
         });
 
