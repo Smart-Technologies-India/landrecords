@@ -71,39 +71,149 @@ const updateFile = async (
       };
 
     if (payload.names) {
-      await prisma.file_name.createMany({
-        data: payload.names.map((name) => ({
-          fileId: file.id,
-          name,
-        })),
-      });
+      for (let i = 0; i < payload.names.length; i++) {
+        const isexit = await prisma.file_name.findFirst({
+          where: {
+            name: payload.names[i],
+            fileId: file.id,
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.names[i]} already exist in name section.`,
+            functionname: "updateFile",
+          };
+        }
+
+        const addresponse = await prisma.file_name.create({
+          data: {
+            fileId: file.id,
+            name: payload.names[i],
+          },
+        });
+
+        if (!addresponse) {
+          return {
+            status: false,
+            data: null,
+            message: `Unable to add ${payload.names[i]} name.Try again!`,
+            functionname: "updateFile",
+          };
+        }
+      }
     }
+
     if (payload.surveyNumbers) {
-      await prisma.file_survey.createMany({
-        data: payload.surveyNumbers.map((surveyNumber) => ({
-          fileId: file.id,
-          survey_number: surveyNumber,
-          villageId: payload.villageId!,
-        })),
-      });
+      for (let i = 0; i < payload.surveyNumbers.length; i++) {
+        const isexit = await prisma.file_survey.findFirst({
+          where: {
+            fileId: file.id,
+            survey_number: payload.surveyNumbers[i],
+            villageId: payload.villageId!,
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.surveyNumbers[i]} already exist in Survey Number section.`,
+            functionname: "updateFile",
+          };
+        }
+
+        const addresponse = await prisma.file_survey.create({
+          data: {
+            fileId: file.id,
+            survey_number: payload.surveyNumbers[i],
+            villageId: payload.villageId!,
+          },
+        });
+
+        if (!addresponse) {
+          return {
+            status: false,
+            data: null,
+            message: `Unable to add ${payload.surveyNumbers[i]} Survey Number.Try again!`,
+            functionname: "updateFile",
+          };
+        }
+      }
     }
 
     if (payload.referenceNumbers) {
-      await prisma.file_ref.createMany({
-        data: payload.referenceNumbers.map((referenceNumber, index) => ({
-          fileId: file.id,
-          file_ref: referenceNumber,
-        })),
-      });
+      for (let i = 0; i < payload.referenceNumbers.length; i++) {
+        const isexit = await prisma.file_ref.findFirst({
+          where: {
+            fileId: file.id,
+            file_ref: payload.referenceNumbers[i],
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.referenceNumbers[i]} already exist in Reference Number section.`,
+            functionname: "updateFile",
+          };
+        }
+
+        const addresponse = await prisma.file_ref.create({
+          data: {
+            fileId: file.id,
+            file_ref: payload.referenceNumbers[i],
+          },
+        });
+
+        if (!addresponse) {
+          return {
+            status: false,
+            data: null,
+            message: `Unable to add ${payload.referenceNumbers[i]} Reference Number.Try again!`,
+            functionname: "updateFile",
+          };
+        }
+      }
     }
 
     if (payload.dates) {
-      await prisma.file_dates.createMany({
-        data: payload.dates.map((date) => ({
-          fileId: file.id,
-          dates: date,
-        })),
-      });
+      for (let i = 0; i < payload.dates.length; i++) {
+        const isexit = await prisma.file_dates.findFirst({
+          where: {
+            fileId: file.id,
+            dates: payload.dates[i],
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.dates[i]} already exist in date section.`,
+            functionname: "updateFile",
+          };
+        }
+
+        const addresponse = await prisma.file_dates.create({
+          data: {
+            fileId: file.id,
+            dates: payload.dates[i],
+          },
+        });
+
+        if (!addresponse) {
+          return {
+            status: false,
+            data: null,
+            message: `Unable to add ${payload.dates[i]} date.Try again!`,
+            functionname: "updateFile",
+          };
+        }
+      }
     }
 
     revalidatePath("/home");
