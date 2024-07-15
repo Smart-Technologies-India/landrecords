@@ -41,6 +41,87 @@ const updateFile = async (
       };
     }
 
+    if (payload.names) {
+      for (let i = 0; i < payload.names.length; i++) {
+        const isexit = await prisma.file_name.findFirst({
+          where: {
+            name: payload.names[i],
+            fileId: isexist.id,
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.names[i]} already exist in name section.`,
+            functionname: "updateFile",
+          };
+        }
+      }
+    }
+
+    if (payload.surveyNumbers) {
+      for (let i = 0; i < payload.surveyNumbers.length; i++) {
+        const isexit = await prisma.file_survey.findFirst({
+          where: {
+            fileId: isexist.id,
+            survey_number: payload.surveyNumbers[i],
+            villageId: payload.villageId!,
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.surveyNumbers[i]} already exist in Survey Number section.`,
+            functionname: "updateFile",
+          };
+        }
+      }
+    }
+
+    if (payload.referenceNumbers) {
+      for (let i = 0; i < payload.referenceNumbers.length; i++) {
+        const isexit = await prisma.file_ref.findFirst({
+          where: {
+            fileId: isexist.id,
+            file_ref: payload.referenceNumbers[i],
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.referenceNumbers[i]} already exist in Reference Number section.`,
+            functionname: "updateFile",
+          };
+        }
+      }
+    }
+
+    if (payload.dates) {
+      for (let i = 0; i < payload.dates.length; i++) {
+        const isexit = await prisma.file_dates.findFirst({
+          where: {
+            fileId: isexist.id,
+            dates: payload.dates[i],
+          },
+        });
+
+        if (isexit) {
+          return {
+            status: false,
+            data: null,
+            message: `${payload.dates[i]} already exist in date section.`,
+            functionname: "updateFile",
+          };
+        }
+      }
+    }
+
     const data_to_update: any = {};
 
     if (payload.file_no) data_to_update.file_no = payload.file_no;
