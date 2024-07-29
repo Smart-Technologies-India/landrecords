@@ -5,7 +5,6 @@ import GetFile from "@/actions/getfile";
 import getVillage from "@/actions/getvillage";
 import GetUser from "@/actions/user/getuser";
 import logout from "@/actions/user/logout";
-import verifyFile from "@/actions/verifyfile";
 import {
   Fa6SolidArrowLeftLong,
   Fa6SolidCircleMinus,
@@ -29,7 +28,6 @@ import { ApiResponseType } from "@/models/response";
 import { UpdateFileSchema } from "@/schemas/updatefile";
 import { capitalcase } from "@/utils/methods";
 import { file, user, village } from "@prisma/client";
-import { Divide } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -135,6 +133,7 @@ const ViewFile = (props: ViewFileProps) => {
         surveyNumbers: Array.from(surveyset),
         referenceNumbers: Array.from(referenceset),
         dates: Array.from(datesset),
+        user_id: props.id,
         ...(remark.current!.value && { remarks: remark.current!.value }),
       });
 

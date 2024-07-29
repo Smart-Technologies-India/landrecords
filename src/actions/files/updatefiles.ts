@@ -138,7 +138,10 @@ const updateFile = async (
       where: {
         id: isexist.id,
       },
-      data: data_to_update,
+      data: {
+        qc: payload.user_id,
+        ...data_to_update,
+      },
     });
 
     if (!file)
