@@ -38,3 +38,20 @@ const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 };
 
 export { handleNumberChange };
+
+const formateDate = (date: Date): string => {
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  if (month < 10 && day < 10) {
+    return `0${day}-0${month}-${year}`;
+  } else if (month < 10) {
+    return `${day}-0${month}-${year}`;
+  } else if (day < 10) {
+    return `0${day}-${month}-${year}`;
+  } else {
+    return `${day}-${month}-${year}`;
+  }
+};
+export { formateDate };

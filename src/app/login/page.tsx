@@ -35,6 +35,8 @@ export default function Home() {
           router.push("/search");
         } else if (registerrespone.data?.role === "FEEDER") {
           router.push("/feeder");
+        } else if (registerrespone.data?.role === "SYSTEM") {
+          router.push("/system");
         } else if (registerrespone.data?.role === "USER") {
           router.push("/home");
         } else if (registerrespone.data?.role === "DEPARTMENT") {

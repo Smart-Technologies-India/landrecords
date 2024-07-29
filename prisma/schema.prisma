@@ -44,7 +44,8 @@ model user {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
-  file      file[]
+  qc        file[]    @relation("qc")
+  file      file[]    @relation("user")
 }
 
 model village {
@@ -85,8 +86,10 @@ model file {
   ownership_type         String?
   physical_file_location physical_file_location? @relation(fields: [physicalFileLocationId], references: [id])
   physicalFileLocationId Int?
-  user                   user                    @relation(fields: [userId], references: [id])
+  user                   user                    @relation("user", fields: [userId], references: [id])
   userId                 Int
+  qcId                   user?                   @relation("qc", fields: [qc], references: [id])
+  qc                     Int?
   status                 FileStatus              @default(ACTIVE)
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
