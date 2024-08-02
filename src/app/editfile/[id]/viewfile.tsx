@@ -60,6 +60,39 @@ const ViewFile = (props: ViewFileProps) => {
 
   // input data end from
 
+  const initdata = async () => {
+    setLoading(true);
+
+    const responseuser = await GetUser({ id: props.id });
+    if (responseuser.status) {
+      setUserData((val) => responseuser.data);
+    } else {
+      toast.error(responseuser.message);
+    }
+
+    const response: any = await GetFile({ id: props.fileid });
+    if (response.status) {
+      setFileData((val: any) => response.data);
+      setVillage(response.data.village.id);
+
+      setTimeout(() => {
+        file_no.current!.value = response.data!.file_no;
+        applicant_name.current!.value = response.data!.applicant_name;
+        survey.current!.value = response.data!.survey_number;
+        remark.current!.value = response.data!.remarks;
+      }, 2000);
+    } else {
+      toast.error(response.message);
+    }
+
+    const villages_response = await getVillage({});
+    if (villages_response.status) {
+      setVillages(villages_response.data!);
+    }
+
+    setLoading(false);
+  };
+
   useEffect(() => {
     const init = async () => {
       setLoading(true);
@@ -142,6 +175,7 @@ const ViewFile = (props: ViewFileProps) => {
         router.push(`/viewfile/${filesubmit.data?.id}`);
       } else {
         toast.error(filesubmit.message);
+        await initdata();
       }
     } else {
       let errorMessage = "";
