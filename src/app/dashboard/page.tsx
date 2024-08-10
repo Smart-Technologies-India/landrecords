@@ -338,24 +338,6 @@ const Dashboard = () => {
             </div>
           </div>
         </Link>
-        <Link href={"/dashboard/allfiles"}>
-          <div className="bg-white rounded">
-            <h1 className="text-sm text-gray-500 p-1 px-2">Total Maps</h1>
-            <div className="w-full h-[1px] bg-gray-200"></div>
-            <div className="flex gap-2 items-center px-2">
-              <div className="grid place-items-start my-2">
-                <p className="text-xl text-gray-600">{count.map}</p>
-                <span className="text-xs text-gray-400">Total Map Count</span>
-              </div>
-              <div className="grow"></div>
-              <div>
-                <div className="rounded-full p-2 bg-emerald-500">
-                  <CarbonAlignBoxTopCenter className="text-xl text-white" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </Link>
       </div>
       <div className="grid grid-cols-6 gap-4 mt-4">
         <div className="flex-1 bg-white p-2 rounded col-span-4">
@@ -461,24 +443,21 @@ const Dashboard = () => {
           <div className="max-h-[360px] overflow-y-scroll">
             <Table className="relative">
               <TableBody className="">
-                {typeFile.map((types: any, index: number) => {
-                  if (types.id == 11) return <></>;
-                  return (
-                    <TableRow
-                      key={index}
-                      onClick={() => filetypesearch(types.id)}
-                      className="cursor-pointer hover:bg-gray-100"
-                    >
-                      <TableCell className="font-medium p-1">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell className="p-1">{types.name}</TableCell>
-                      <TableCell className="p-1 text-right">
-                        {types.filecount}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                {typeFile.map((types: any, index: number) => (
+                  <TableRow
+                    key={index}
+                    onClick={() => filetypesearch(types.id)}
+                    className="cursor-pointer hover:bg-gray-100"
+                  >
+                    <TableCell className="font-medium p-1">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell className="p-1">{types.name}</TableCell>
+                    <TableCell className="p-1 text-right">
+                      {types.filecount}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
