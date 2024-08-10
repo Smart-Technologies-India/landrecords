@@ -15,20 +15,41 @@ interface ResponseData {
   role: string;
   filecount: number;
   pagecount: number;
+  namecount: number;
+  refcount: number;
+  surveycount: number;
 }
+
+const getTime = (date: Date): Date => {
+  // Get the time zone offset in minutes
+  const timezoneOffset = date.getTimezoneOffset();
+
+  // Adjust the time to align with the local time zone
+  const adjustedDate = new Date(date.getTime() - timezoneOffset * 60 * 1000);
+
+  return new Date(adjustedDate.toISOString().split("T")[0] + "T00:00:00.000Z");
+  // "2024-08-14T00:00:00.000Z"
+};
 
 const DateCounter = async (
   payload: DateCounterPayload
 ): Promise<ApiResponseType<any>> => {
   try {
+    const todayDate = getTime(new Date(payload.date));
+
     const fileresponse = await prisma.file.findMany({
       where: {
         updatedAt: {
-          gte: new Date(payload.date), // Start of the day
-          lt: new Date(
-            new Date(payload.date).setDate(new Date(payload.date).getDate() + 1)
-          ), // Start of the next day
+          gte: todayDate.toISOString(),
+          lte: new Date(
+            todayDate.setDate(todayDate.getDate() + 1)
+          ).toISOString(),
         },
+      },
+      include: {
+        file_name: true,
+        file_ref: true,
+        file_survey: true,
       },
     });
 
@@ -43,9 +64,9 @@ const DateCounter = async (
 
     const userresponse = await prisma.user.findMany({
       where: {
+        deletedAt: null,
         status: "ACTIVE",
         role: "ADMIN",
-        deletedAt: null,
       },
     });
     if (!userresponse) {
@@ -61,7 +82,7 @@ const DateCounter = async (
 
     for (let i = 0; i < userresponse.length; i++) {
       const userentryfile = fileresponse.filter(
-        (val: file) => val.userId == userresponse[i].id
+        (val: file) => val.qc == userresponse[i].id
       );
 
       let data: ResponseData = {
@@ -70,10 +91,16 @@ const DateCounter = async (
         role: userresponse[i].role,
         filecount: 0,
         pagecount: 0,
+        namecount: 0,
+        refcount: 0,
+        surveycount: 0,
       };
       for (let j = 0; j < userentryfile.length; j++) {
         data.filecount += 1;
         data.pagecount += userentryfile[j].page_number!;
+        data.namecount += userentryfile[j].file_name.length;
+        data.refcount += userentryfile[j].file_ref.length;
+        data.surveycount += userentryfile[j].file_survey.length;
       }
 
       responsedata.push(data);

@@ -12,6 +12,9 @@ interface DataResponse {
   date: string;
   filecount: number;
   pagecount: number;
+  namecount: number;
+  refcount: number;
+  surveycount: number;
 }
 
 interface ResponseData {
@@ -41,6 +44,11 @@ const Counter = async (
           lte: endOfDay(enddate),
         },
       },
+      include: {
+        file_name: true,
+        file_ref: true,
+        file_survey: true,
+      },
     });
 
     if (!fileresponse) {
@@ -52,13 +60,12 @@ const Counter = async (
       };
     }
 
-    
     const userresponse = await prisma.user.findMany({
-        where: {
-            deletedAt: null,
-            status: "ACTIVE",
-            role: "ADMIN",
-        },
+      where: {
+        deletedAt: null,
+        status: "ACTIVE",
+        role: "ADMIN",
+      },
     });
     if (!userresponse) {
       return {
@@ -88,15 +95,31 @@ const Counter = async (
         if (existingEntry) {
           existingEntry.filecount += 1;
           existingEntry.pagecount += userentryfile[j].page_number ?? 0;
+          existingEntry.namecount += userentryfile[j].file_name.length;
+          existingEntry.surveycount += userentryfile[j].file_survey.length;
+          existingEntry.refcount += userentryfile[j].file_ref.length;
         } else {
           const data: DataResponse = {
             filecount: 1,
             pagecount: userentryfile[j].page_number ?? 0,
             date: date,
+            namecount: userentryfile[j].file_name.length,
+            surveycount: userentryfile[j].file_survey.length,
+            refcount: userentryfile[j].file_ref.length,
           };
           dataadd.push(data);
         }
       }
+
+      dataadd.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split("-").map(Number);
+        const [dayB, monthB, yearB] = b.date.split("-").map(Number);
+
+        const dateA: Date = new Date(yearA, monthA - 1, dayA); // Month is 0-indexed
+        const dateB: Date = new Date(yearB, monthB - 1, dayB);
+
+        return dateA.getTime() - dateB.getTime();
+      });
 
       const data: ResponseData = {
         id: userresponse[i].id,

@@ -59,7 +59,6 @@ export default function SystemPage(props: AdminProps) {
       }
 
       const countrespone = await Counter({});
-      console.log(countrespone);
       if (countrespone.status && countrespone.data) {
         setData(countrespone.data);
       }
@@ -128,11 +127,18 @@ export default function SystemPage(props: AdminProps) {
                 <Calendar
                   mode="single"
                   selected={date}
-                  onSelect={(e: any) => {
+                  onSelect={(e: Date | undefined) => {
                     if (!e) return;
-                    setDate(e);
+                    setDate(new Date(e));
                     setDateBox(false);
-                    datesearch(e.toISOString());
+
+                    datesearch(
+                      new Date(
+                        e.getFullYear(),
+                        e.getMonth(),
+                        e.getDate()
+                      ).toLocaleDateString()
+                    );
                   }}
                   initialFocus
                 />
@@ -171,6 +177,9 @@ export default function SystemPage(props: AdminProps) {
                     <TableHead className="w-[200px]">Date</TableHead>
                     <TableHead>File Count</TableHead>
                     <TableHead>Page Count</TableHead>
+                    <TableHead>Name Count</TableHead>
+                    <TableHead>Ref Count</TableHead>
+                    <TableHead>Survey Count</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -184,6 +193,9 @@ export default function SystemPage(props: AdminProps) {
                           </TableCell>
                           <TableCell>{val.filecount}</TableCell>
                           <TableCell>{val.pagecount}</TableCell>
+                          <TableCell>{val.namecount}</TableCell>
+                          <TableCell>{val.refcount}</TableCell>
+                          <TableCell>{val.surveycount}</TableCell>
                         </TableRow>
                       ))}
                   {/* {[1, 2, 3, 4, 5, 6, 7].map((invoice: number) => (
@@ -205,6 +217,9 @@ export default function SystemPage(props: AdminProps) {
                     <TableHead className="w-[200px]">User</TableHead>
                     <TableHead>File Count</TableHead>
                     <TableHead>Page Count</TableHead>
+                    <TableHead>Name Count</TableHead>
+                    <TableHead>Ref Count</TableHead>
+                    <TableHead>Survey Count</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -215,6 +230,9 @@ export default function SystemPage(props: AdminProps) {
                       </TableCell>
                       <TableCell>{val.filecount}</TableCell>
                       <TableCell>{val.pagecount}</TableCell>
+                      <TableCell>{val.namecount}</TableCell>
+                      <TableCell>{val.refcount}</TableCell>
+                      <TableCell>{val.surveycount}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
