@@ -45,9 +45,30 @@ const Counter = async (
         },
       },
       include: {
-        file_name: true,
-        file_ref: true,
-        file_survey: true,
+        file_name: {
+          where: {
+            createdAt: {
+              gte: startOfDay(startDate),
+              lte: endOfDay(enddate),
+            },
+          },
+        },
+        file_ref: {
+          where: {
+            createdAt: {
+              gte: startOfDay(startDate),
+              lte: endOfDay(enddate),
+            },
+          },
+        },
+        file_survey: {
+          where: {
+            createdAt: {
+              gte: startOfDay(startDate),
+              lte: endOfDay(enddate),
+            },
+          },
+        },
       },
     });
 

@@ -47,9 +47,36 @@ const DateCounter = async (
         },
       },
       include: {
-        file_name: true,
-        file_ref: true,
-        file_survey: true,
+        file_name: {
+          where: {
+            createdAt: {
+              gte: todayDate.toISOString(),
+              lte: new Date(
+                todayDate.setDate(todayDate.getDate() + 1)
+              ).toISOString(),
+            },
+          },
+        },
+        file_ref: {
+          where: {
+            createdAt: {
+              gte: todayDate.toISOString(),
+              lte: new Date(
+                todayDate.setDate(todayDate.getDate() + 1)
+              ).toISOString(),
+            },
+          },
+        },
+        file_survey: {
+          where: {
+            createdAt: {
+              gte: todayDate.toISOString(),
+              lte: new Date(
+                todayDate.setDate(todayDate.getDate() + 1)
+              ).toISOString(),
+            },
+          },
+        },
       },
     });
 
