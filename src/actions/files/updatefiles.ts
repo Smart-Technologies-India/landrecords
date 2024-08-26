@@ -15,6 +15,10 @@ interface updateFilePayload {
   surveyNumbers?: string[];
   referenceNumbers?: string[];
   dates?: string[];
+  snames?: string;
+  ssurveyNumbers?: string;
+  sreferenceNumbers?: string;
+  sdates?: string;
 }
 
 import { errorToString } from "@/utils/methods";
@@ -60,6 +64,24 @@ const updateFile = async (
       }
     }
 
+    if (payload.snames) {
+      const isexit = await prisma.file_name.findFirst({
+        where: {
+          name: payload.snames,
+          fileId: isexist.id,
+        },
+      });
+
+      if (isexit) {
+        return {
+          status: false,
+          data: null,
+          message: `${payload.snames} already exist in name section.`,
+          functionname: "updateFile",
+        };
+      }
+    }
+
     if (payload.surveyNumbers) {
       for (let i = 0; i < payload.surveyNumbers.length; i++) {
         const isexit = await prisma.file_survey.findFirst({
@@ -77,6 +99,24 @@ const updateFile = async (
             functionname: "updateFile",
           };
         }
+      }
+    }
+
+    if (payload.ssurveyNumbers) {
+      const isexit = await prisma.file_survey.findFirst({
+        where: {
+          fileId: isexist.id,
+          survey_number: payload.ssurveyNumbers,
+        },
+      });
+
+      if (isexit) {
+        return {
+          status: false,
+          data: null,
+          message: `${payload.ssurveyNumbers} already exist in Survey Number section.`,
+          functionname: "updateFile",
+        };
       }
     }
 
@@ -100,6 +140,24 @@ const updateFile = async (
       }
     }
 
+    if (payload.sreferenceNumbers) {
+      const isexit = await prisma.file_ref.findFirst({
+        where: {
+          fileId: isexist.id,
+          file_ref: payload.sreferenceNumbers,
+        },
+      });
+
+      if (isexit) {
+        return {
+          status: false,
+          data: null,
+          message: `${payload.sreferenceNumbers} already exist in Reference Number section.`,
+          functionname: "updateFile",
+        };
+      }
+    }
+
     if (payload.dates) {
       for (let i = 0; i < payload.dates.length; i++) {
         const isexit = await prisma.file_dates.findFirst({
@@ -117,6 +175,24 @@ const updateFile = async (
             functionname: "updateFile",
           };
         }
+      }
+    }
+
+    if (payload.sdates) {
+      const isexit = await prisma.file_dates.findFirst({
+        where: {
+          fileId: isexist.id,
+          dates: payload.sdates,
+        },
+      });
+
+      if (isexit) {
+        return {
+          status: false,
+          data: null,
+          message: `${payload.sdates} already exist in date section.`,
+          functionname: "updateFile",
+        };
       }
     }
 

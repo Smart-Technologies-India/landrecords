@@ -53,15 +53,15 @@ const ViewFile = (props: ViewFileProps) => {
   const survey = useRef<HTMLInputElement>(null);
   const remark = useRef<HTMLTextAreaElement>(null);
 
-  const [names, setNames] = useState<string[]>([]);
-  const [surveyNumbers, setSurveyNumbers] = useState<string[]>([]);
-  const [referenceNumbers, setReferenceNumbers] = useState<string[]>([]);
-  const [dates, setDates] = useState<string[]>([]);
+  const [names, setNames] = useState<string>("");
+  const [surveyNumbers, setSurveyNumbers] = useState<string>("");
+  const [referenceNumbers, setReferenceNumbers] = useState<string>("");
+  const [dates, setDates] = useState<string>("");
 
   // input data end from
 
   const initdata = async () => {
-    setLoading(true);
+    // setLoading(true);
 
     const responseuser = await GetUser({ id: props.id });
     if (responseuser.status) {
@@ -90,7 +90,7 @@ const ViewFile = (props: ViewFileProps) => {
       setVillages(villages_response.data!);
     }
 
-    setLoading(false);
+    // setLoading(false);
   };
 
   useEffect(() => {
@@ -368,9 +368,204 @@ const ViewFile = (props: ViewFileProps) => {
         <div className="mt-4"></div>
         <Separator />
         <div className="flex gap-4 mt-4 w-full flex-wrap">
-          <InputCard title="Name" values={names} setvalue={setNames} />
+          <Card className="p-2 min-w-60 flex-1">
+            <div className="flex items-center">
+              <h1 className="text-center text-xl font-medium grow">Names</h1>
+            </div>
+            <div className="mt-4">
+              <Input
+                value={names}
+                onChange={async (e) => {
+                  let val = e.target.value;
+                  if (val.includes("`")) {
+                    val = val.slice(0, -1);
+                    if (val == null || val == undefined || val == "") {
+                      return toast.error("Empty field is not allowed");
+                    }
 
-          <InputCard
+                    const res = filedata.file_name.filter(
+                      (data: any) =>
+                        data.name.toLowerCase() == val.toLowerCase()
+                    );
+
+                    if (res.length > 0) {
+                      setNames("");
+                      return toast.error("Name already exist.");
+                    }
+
+                    const filesubmit: ApiResponseType<file | null> =
+                      await updateFile({
+                        id: props.fileid,
+                        names: [capitalcase(val)],
+                        user_id: props.id,
+                      });
+
+                    if (filesubmit.status) {
+                      toast.success("Name added Successfully");
+                    } else {
+                      toast.error(filesubmit.message);
+                    }
+                    setNames("");
+                    await initdata();
+                  }
+
+                  setNames((val) => e.target.value);
+                }}
+                placeholder={"Enter Name"}
+              />
+            </div>
+          </Card>
+          <Card className="p-2 min-w-60 flex-1">
+            <div className="flex items-center">
+              <h1 className="text-center text-xl font-medium grow">
+                Reference Numbers
+              </h1>
+            </div>
+            <div className="mt-4">
+              <Input
+                value={referenceNumbers}
+                onChange={async (e) => {
+                  let val = e.target.value;
+                  if (val.includes("`")) {
+                    val = val.slice(0, -1);
+                    if (val == null || val == undefined || val == "") {
+                      return toast.error("Empty field is not allowed");
+                    }
+
+                    const res = filedata.file_ref.filter(
+                      (data: any) =>
+                        data.file_ref.toLowerCase() == val.toLowerCase()
+                    );
+
+                    if (res.length > 0) {
+                      setReferenceNumbers("");
+                      return toast.error("Reference Numbers already exist.");
+                    }
+
+                    const filesubmit: ApiResponseType<file | null> =
+                      await updateFile({
+                        id: props.fileid,
+                        referenceNumbers: [val],
+                        user_id: props.id,
+                      });
+
+                    if (filesubmit.status) {
+                      toast.success("Reference Numbers added Successfully");
+                    } else {
+                      toast.error(filesubmit.message);
+                    }
+                    setReferenceNumbers("");
+                    await initdata();
+                  }
+
+                  setReferenceNumbers((val) => e.target.value);
+                }}
+                placeholder={"Enter Reference Numbers"}
+              />
+            </div>
+          </Card>
+          <Card className="p-2 min-w-60 flex-1">
+            <div className="flex items-center">
+              <h1 className="text-center text-xl font-medium grow">
+                File Survey
+              </h1>
+            </div>
+            <div className="mt-4">
+              <Input
+                value={surveyNumbers}
+                onChange={async (e) => {
+                  let val = e.target.value;
+                  if (val.includes("`")) {
+                    val = val.slice(0, -1);
+                    if (val == null || val == undefined || val == "") {
+                      return toast.error("Empty field is not allowed");
+                    }
+
+                    const res = filedata.file_survey.filter(
+                      (data: any) =>
+                        data.survey_number.toLowerCase() == val.toLowerCase()
+                    );
+
+                    if (res.length > 0) {
+                      setSurveyNumbers("");
+                      return toast.error("Survey Numbers already exist.");
+                    }
+
+                    const filesubmit: ApiResponseType<file | null> =
+                      await updateFile({
+                        id: props.fileid,
+                        names: [capitalcase(val)],
+                        user_id: props.id,
+                      });
+
+                    if (filesubmit.status) {
+                      toast.success("Survey Numbers added Successfully");
+                    } else {
+                      toast.error(filesubmit.message);
+                    }
+                    setSurveyNumbers("");
+                    await initdata();
+                  }
+
+                  setSurveyNumbers((val) => e.target.value);
+                }}
+                placeholder={"Enter Survey Numbers"}
+              />
+            </div>
+          </Card>
+          <Card className="p-2 min-w-60 flex-1">
+            <div className="flex items-center">
+              <h1 className="text-center text-xl font-medium grow">
+                File dates
+              </h1>
+            </div>
+            <div className="mt-4">
+              <Input
+                value={dates}
+                onChange={async (e) => {
+                  let val = e.target.value;
+                  if (val.includes("`")) {
+                    val = val.slice(0, -1);
+                    if (val == null || val == undefined || val == "") {
+                      return toast.error("Empty field is not allowed");
+                    }
+
+                    const res = filedata.file_dates.filter(
+                      (data: any) =>
+                        data.dates.toLowerCase() == val.toLowerCase()
+                    );
+
+                    if (res.length > 0) {
+                      setDates("");
+                      return toast.error("Date already exist.");
+                    }
+
+                    const filesubmit: ApiResponseType<file | null> =
+                      await updateFile({
+                        id: props.fileid,
+                        dates: [val],
+                        user_id: props.id,
+                      });
+
+                    if (filesubmit.status) {
+                      toast.success("Date added Successfully");
+                    } else {
+                      toast.error(filesubmit.message);
+                    }
+                    setDates("");
+                    await initdata();
+                  }
+
+                  setDates((val) => e.target.value);
+                }}
+                placeholder={"Enter Date"}
+              />
+            </div>
+          </Card>
+
+          {/* <InputCard title="Name" values={names} setvalue={setNames} /> */}
+
+          {/* <InputCard
             title="Reference Numbers"
             values={referenceNumbers}
             setvalue={setReferenceNumbers}
@@ -380,7 +575,7 @@ const ViewFile = (props: ViewFileProps) => {
             values={surveyNumbers}
             setvalue={setSurveyNumbers}
           />
-          <InputCard title="Dates" values={dates} setvalue={setDates} />
+          <InputCard title="Dates" values={dates} setvalue={setDates} /> */}
         </div>
         <Button className="w-full mt-4" onClick={updatefile}>
           Submit

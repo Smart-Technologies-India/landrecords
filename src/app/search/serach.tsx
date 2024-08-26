@@ -45,6 +45,7 @@ const SearchAdmin = (props: HomeProps) => {
   const [villages, setVillages] = useState<village[]>([]);
   const [fileTypes, setFileTypes] = useState<file_type[]>([]);
 
+  const [isSearching, setSearching] = useState<boolean>(false);
   const [isSearch, setSearch] = useState<boolean>(false);
   const [searchData, setSearchData] = useState<file[] | null>(null);
 
@@ -87,6 +88,7 @@ const SearchAdmin = (props: HomeProps) => {
   const remark = useRef<HTMLTextAreaElement>(null);
 
   const search = async () => {
+    setSearching(true);
     const filesearch: ApiResponseType<file[] | null> = await fileSearch({
       file_id: file_id.current?.value,
       file_no: file_no.current?.value,
@@ -106,6 +108,7 @@ const SearchAdmin = (props: HomeProps) => {
     } else {
       toast.error(filesearch.message);
     }
+    setSearching(false);
   };
 
   const logoutbtn = async () => {
@@ -277,9 +280,13 @@ const SearchAdmin = (props: HomeProps) => {
         </div>
       </Card>
 
-      <Button className="w-full mt-4" onClick={search}>
-        Search
-      </Button>
+      {isSearching ? (
+        <Button className="w-full mt-4">Loading.....</Button>
+      ) : (
+        <Button className="w-full mt-4" onClick={search}>
+          Search
+        </Button>
+      )}
       <Card className="mt-6">
         <CardHeader className="py-2 px-4 flex flex-row items-center">
           <h1 className="text-xl">Search Result</h1>
