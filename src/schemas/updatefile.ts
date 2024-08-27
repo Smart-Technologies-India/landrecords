@@ -7,6 +7,7 @@ import {
   minValue,
   number,
   object,
+  optional,
   string,
 } from "valibot";
 
@@ -18,12 +19,14 @@ const UpdateFileSchema = object(
       minLength(1, "Please enter your file survey number."),
     ]),
     villageId: number([minValue(1, "Select village.")]),
-    names: array(string([minLength(1, "Please enter name.")])),
-    surveyNumbers: array(string([minLength(1, "Please enter survey number.")])),
-    referenceNumbers: array(
-      string([minLength(1, "Please enter reference number.")])
+    names: optional(array(string([minLength(1, "Please enter name.")]))),
+    surveyNumbers: optional(
+      array(string([minLength(1, "Please enter survey number.")]))
     ),
-    dates: array(string([minLength(1, "Please enter date.")])),
+    referenceNumbers: optional(
+      array(string([minLength(1, "Please enter reference number.")]))
+    ),
+    dates: optional(array(string([minLength(1, "Please enter date.")]))),
   },
   [
     forward(

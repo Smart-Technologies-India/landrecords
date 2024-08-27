@@ -144,17 +144,17 @@ const ViewFile = (props: ViewFileProps) => {
       applicant_name: applicant_name.current!.value,
       survey_number: survey.current!.value,
       villageId: village,
-      referenceNumbers: referenceNumbers,
-      names: names,
-      surveyNumbers: surveyNumbers,
-      dates: dates,
     });
+    // referenceNumbers: referenceNumbers,
+    // names: names,
+    // surveyNumbers: surveyNumbers,
+    // dates: dates,
 
     if (result.success) {
-      const nameset = new Set(names);
-      const surveyset = new Set(surveyNumbers);
-      const referenceset = new Set(referenceNumbers);
-      const datesset = new Set(dates);
+      // const nameset = new Set(names);
+      // const surveyset = new Set(surveyNumbers);
+      // const referenceset = new Set(referenceNumbers);
+      // const datesset = new Set(dates);
 
       const filesubmit: ApiResponseType<file | null> = await updateFile({
         id: props.fileid,
@@ -162,14 +162,14 @@ const ViewFile = (props: ViewFileProps) => {
         applicant_name: result.output.applicant_name,
         survey_number: result.output.survey_number,
         villageId: result.output.villageId,
-        names: Array.from(nameset),
-        surveyNumbers: Array.from(surveyset),
-        referenceNumbers: Array.from(referenceset),
-        dates: Array.from(datesset),
         user_id: props.id,
         ...(remark.current!.value && { remarks: remark.current!.value }),
       });
 
+      // names: Array.from(nameset),
+      // surveyNumbers: Array.from(surveyset),
+      // referenceNumbers: Array.from(referenceset),
+      // dates: Array.from(datesset),
       if (filesubmit.status) {
         toast.success("File Updated Successfully");
         router.push(`/viewfile/${filesubmit.data?.id}`);
@@ -496,6 +496,7 @@ const ViewFile = (props: ViewFileProps) => {
                         id: props.fileid,
                         surveyNumbers: [capitalcase(val)],
                         user_id: props.id,
+                        villageId: village,
                       });
 
                     if (filesubmit.status) {
