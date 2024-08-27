@@ -494,7 +494,7 @@ const ViewFile = (props: ViewFileProps) => {
                     const filesubmit: ApiResponseType<file | null> =
                       await updateFile({
                         id: props.fileid,
-                        names: [capitalcase(val)],
+                        surveyNumbers: [capitalcase(val)],
                         user_id: props.id,
                       });
 
