@@ -19,11 +19,31 @@ const GetFile = async (
         user: true,
         village: true,
         type: true,
-        file_name: true,
-        file_survey: true,
-        file_ref: true,
-        file_dates: true,
-        physical_file_location: true,
+        file_name: {
+          where: {
+            deletedAt: null,
+          },
+        },
+        file_survey: {
+          where: {
+            deletedAt: null,
+          },
+        },
+        file_ref: {
+          where: {
+            deletedAt: null,
+          },
+        },
+        file_dates: {
+          where: {
+            deletedAt: null,
+          },
+        },
+        physical_file_location: {
+          where: {
+            deletedAt: null,
+          },
+        },
       },
     });
 
