@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import GetUser from "@/actions/user/getuser";
 import { MaterialSymbolsLightCalendarMonthOutline } from "@/components/icons";

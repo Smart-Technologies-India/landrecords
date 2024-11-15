@@ -33,6 +33,8 @@ enum Role {
   DEPARTMENT
   USER
   FEEDER
+  LDC
+  SUPTD
 }
 
 model user {
@@ -155,4 +157,65 @@ model physical_file_location {
   updatedAt      DateTime       @updatedAt
   deletedAt      DateTime?
   file           file[]
+}
+
+model form1 {
+  id                  Int                 @id @default(autoincrement())
+  sr_no               String
+  holder_name         String
+  residence_place     String
+  celiling_applicable String
+  action              String?
+  remark              String?
+  status              Status              @default(ACTIVE)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  deletedAt           DateTime?
+  form1_family        form1_family[]
+  form1_land          form1_land[]
+  form1_acquisition   form1_acquisition[]
+}
+
+model form1_family {
+  id           Int       @id @default(autoincrement())
+  form1        form1     @relation(fields: [form1id], references: [id])
+  form1id      Int
+  name         String
+  age          Int
+  relationship String
+  remark       String?
+  status       Status    @default(ACTIVE)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+}
+
+model form1_land {
+  id        Int       @id @default(autoincrement())
+  form1     form1     @relation(fields: [form1id], references: [id])
+  form1id   Int
+  village   String
+  survey_no String
+  area      String
+  remark    String?
+  status    Status    @default(ACTIVE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model form1_acquisition {
+  id        Int       @id @default(autoincrement())
+  form1     form1     @relation(fields: [form1id], references: [id])
+  form1id   Int
+  date      DateTime
+  village   String
+  survey_no String
+  area      String
+  type      String
+  remark    String?
+  status    Status    @default(ACTIVE)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 }

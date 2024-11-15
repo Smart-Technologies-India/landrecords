@@ -1,71 +1,39 @@
 import { isContainSpace } from "@/utils/methods";
-import {
-  Input,
-  custom,
-  forward,
-  minLength,
-  object,
-  regex,
-  string,
-} from "valibot";
+import { InferInput, check, forward, minLength, object, regex, string, pipe } from "valibot"
 
-const RegisterSchema = object(
-  {
-    username: string([
-      minLength(1, "Please enter your username."),
-      custom(isContainSpace, "Username cannot contain space."),
-    ]),
-    password: string([
-      minLength(1, "Please enter your password."),
-      minLength(8, "Your password must have 8 characters or more."),
-      regex(/^(?=.*[0-9]).*$/, "Your password must have at least one number."),
-      regex(
+const RegisterSchema = pipe(object({
+    username: pipe(string(), minLength(1, "Please enter your username.") , check(isContainSpace, "Username cannot contain space.") ,),
+    password: pipe(string(), minLength(1, "Please enter your password.") , minLength(8, "Your password must have 8 characters or more.") , regex(/^(?=.*[0-9]).*$/, "Your password must have at least one number.") , regex(
         /^(?=.*[!@#$%^&*]).*$/,
         "Your password must have at least one special character."
-      ),
-      regex(
+      ) , regex(
         /^(?=.*[A-Z]).*$/,
         "Your password must have at least one uppercase."
-      ),
-      regex(
+      ) , regex(
         /^(?=.*[a-z]).*$/,
         "Your password must have at least one lowercase."
-      ),
-      custom(isContainSpace, "Password cannot contain space."),
-    ]),
-    repassword: string([
-      minLength(1, "Please enter your re-password."),
-      minLength(8, "Your re-password must have 8 characters or more."),
-      regex(
+      ) , check(isContainSpace, "Password cannot contain space.") ,),
+    repassword: pipe(string(), minLength(1, "Please enter your re-password.") , minLength(8, "Your re-password must have 8 characters or more.") , regex(
         /^(?=.*[0-9]).*$/,
         "Your re-password must have at least one number."
-      ),
-      regex(
+      ) , regex(
         /^(?=.*[!@#$%^&*]).*$/,
         "Your re-password must have at least one special character."
-      ),
-      regex(
+      ) , regex(
         /^(?=.*[A-Z]).*$/,
         "Your re-password must have at least one uppercase."
-      ),
-      regex(
+      ) , regex(
         /^(?=.*[a-z]).*$/,
         "Your re-password must have at least one lowercase."
-      ),
-      custom(isContainSpace, "Re-password cannot contain space."),
-    ]),
-  },
-  [
-    forward(
-      custom(
+      ) , check(isContainSpace, "Re-password cannot contain space.") ,),
+  }), forward(
+      check(
         (input) => input.password === input.repassword,
         "Password and Re-Password should be same."
       ),
       ["repassword"]
-    ),
-  ]
-);
+    ) ,);
 
-type RegisterForm = Input<typeof RegisterSchema>;
+type RegisterForm = InferInput<typeof RegisterSchema>;
 
 export { RegisterSchema, type RegisterForm };

@@ -1,8 +1,35 @@
-import { NextURL } from "next/dist/server/web/next-url";
+import { Role } from "@prisma/client";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const idCookie = request.cookies.get("id");
+  const id: string | undefined = idCookie?.value.toString();
+
+  const roleCookie = request.cookies.get("role");
+  const role: string | undefined = roleCookie?.value.toString();
+
+  const roletopage = (role: Role): string => {
+    switch (role) {
+      case Role.ADMIN:
+        return "/search";
+      case Role.DEPARTMENT:
+        return "/dashboard";
+      case Role.FEEDER:
+        return "/feeder";
+      case Role.LDC:
+        return "/dashboard";
+      case Role.SUPTD:
+        return "/dashboard";
+      case Role.SYSTEM:
+        return "/system";
+      case Role.USER:
+        return "/home";
+      default:
+        return "/home";
+    }
+  };
+
   if (
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/register")
@@ -63,7 +90,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     } else if (role == "USER") {
       return NextResponse.redirect(new URL("/home", request.url));
-    } else if (role == "DEPARTMENT") {
+    } else if (["DEPARTMENT", "LDC", "SUPTD"].includes(role)) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
@@ -87,7 +114,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     } else if (role == "USER") {
       return NextResponse.redirect(new URL("/home", request.url));
-    } else if (role == "DEPARTMENT") {
+    } else if (["DEPARTMENT", "LDC", "SUPTD"].includes(role)) {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
@@ -111,7 +138,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/feeder", request.url));
     } else if (role == "USER") {
       return NextResponse.redirect(new URL("/home", request.url));
-    } else if (role == "DEPARTMENT") {
+    } else if (["DEPARTMENT", "LDC", "SUPTD"].includes(role)) {
       return NextResponse.next();
     }
   }

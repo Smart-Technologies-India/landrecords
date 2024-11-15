@@ -1,3 +1,5 @@
+import { FieldErrors, FieldValues } from "react-hook-form";
+
 const errorToString = (e: unknown): string => {
   let err: string = "";
   if (typeof e === "string") {
@@ -54,4 +56,30 @@ const formateDate = (date: Date): string => {
     return `${day}-${month}-${year}`;
   }
 };
-export { formateDate };
+
+const removeDuplicates = (arr: any[]): any[] => {
+  return Array.from(new Set(arr));
+};
+export { formateDate, removeDuplicates };
+
+const onFormError = <T extends FieldValues>(error: FieldErrors<T>) => {
+  const firstErrorMessage = Object.values(error)[0]?.message;
+
+  setTimeout(() => {
+    if (firstErrorMessage) {
+      const errorElement = Array.from(document.querySelectorAll("p")).find(
+        (el) => el.textContent == firstErrorMessage
+      );
+      if (errorElement) {
+        // Scroll to the error message element
+        errorElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "start",
+        });
+      }
+    }
+  }, 1000);
+};
+
+export { onFormError };

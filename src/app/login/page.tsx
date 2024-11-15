@@ -39,7 +39,11 @@ export default function Home() {
           router.push("/system");
         } else if (registerrespone.data?.role === "USER") {
           router.push("/home");
-        } else if (registerrespone.data?.role === "DEPARTMENT") {
+        } else if (
+          registerrespone.data?.role === "DEPARTMENT" ||
+          registerrespone.data?.role === "LDC" ||
+          registerrespone.data?.role === "SUPTD"
+        ) {
           router.push("/dashboard");
         } else {
           router.push("/home");

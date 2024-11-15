@@ -2,6 +2,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   CarbonPassword,
   Fa6RegularFileLines,
+  FluentDocumentOnePageMultiple24Filled,
   FluentMdl2Home,
   FluentMdl2Search,
   FluentMdl2ViewDashboard,
@@ -84,6 +85,16 @@ const Sidebar = (props: SidebarProps) => {
         path={path}
         pathcheck={"/dashboard/searchmatch"}
       />
+      {["LDC", "SUPTD"].includes(props.role) && (
+        <MenuTab
+          icco={
+            <FluentDocumentOnePageMultiple24Filled className="text-gray-300  w-6" />
+          }
+          name="Form-1"
+          path={path}
+          pathcheck={"/dashboard/form1"}
+        />
+      )}
 
       <div className="grow"></div>
 

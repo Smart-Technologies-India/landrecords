@@ -1,16 +1,10 @@
 import { isContainSpace } from "@/utils/methods";
-import { Input, custom, minLength, object, string } from "valibot";
+import { InferInput, check, minLength, object, string, pipe } from "valibot"
 
 const LoginSchema = object({
-  username: string([
-    minLength(1, "Please enter your username."),
-    custom(isContainSpace, "Username cannot contain space."),
-  ]),
-  password: string([
-    minLength(1, "Please enter your password."),
-    custom(isContainSpace, "Password cannot contain space."),
-  ]),
+  username: pipe(string(), minLength(1, "Please enter your username.") , check(isContainSpace, "Username cannot contain space.") ,),
+  password: pipe(string(), minLength(1, "Please enter your password.") , check(isContainSpace, "Password cannot contain space.") ,),
 });
 
-type LoginForm = Input<typeof LoginSchema>;
+type LoginForm = InferInput<typeof LoginSchema>;
 export { LoginSchema, type LoginForm };
