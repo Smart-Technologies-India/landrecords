@@ -2,6 +2,7 @@
 
 import updateFile from "@/actions/files/updatefiles";
 import GetFile from "@/actions/getfile";
+import getFileType from "@/actions/getfiletype";
 import getVillage from "@/actions/getvillage";
 import GetUser from "@/actions/user/getuser";
 import logout from "@/actions/user/logout";
@@ -27,7 +28,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ApiResponseType } from "@/models/response";
 import { UpdateFileSchema } from "@/schemas/updatefile";
 import { capitalcase } from "@/utils/methods";
-import { file, user, village } from "@prisma/client";
+import { file, file_type, user, village } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
@@ -44,11 +45,15 @@ const ViewFile = (props: ViewFileProps) => {
   const [userdata, setUserData] = useState<user | null>(null);
   const [filedata, setFileData] = useState<any>(null);
   const [villages, setVillages] = useState<village[]>([]);
+  const [types, setTypes] = useState<file_type[]>([]);
 
   // input data start from
 
   const file_no = useRef<HTMLInputElement>(null);
   const [village, setVillage] = useState<number>(0);
+
+  const [type, setType] = useState<number>(0);
+
   const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
   const remark = useRef<HTMLTextAreaElement>(null);
@@ -69,6 +74,15 @@ const ViewFile = (props: ViewFileProps) => {
     } else {
       toast.error(responseuser.message);
     }
+    const villages_response = await getVillage({});
+    if (villages_response.status) {
+      setVillages(villages_response.data!);
+    }
+
+    const types_response = await getFileType({});
+    if (types_response.status) {
+      setTypes(types_response.data!);
+    }
 
     const response: any = await GetFile({ id: props.fileid });
     if (response.status) {
@@ -85,15 +99,11 @@ const ViewFile = (props: ViewFileProps) => {
       toast.error(response.message);
     }
 
-    const villages_response = await getVillage({});
-    if (villages_response.status) {
-      setVillages(villages_response.data!);
-    }
-
     // setLoading(false);
   };
 
   useEffect(() => {
+    console.log("working fine");
     const init = async () => {
       setLoading(true);
 
@@ -104,10 +114,20 @@ const ViewFile = (props: ViewFileProps) => {
         toast.error(responseuser.message);
       }
 
+      const villages_response = await getVillage({});
+      if (villages_response.status) {
+        setVillages(villages_response.data!);
+      }
+
+      const types_response = await getFileType({});
+      if (types_response.status) {
+        setTypes(types_response.data!);
+      }
       const response: any = await GetFile({ id: props.fileid });
       if (response.status) {
         setFileData((val: any) => response.data);
         setVillage(response.data.village.id);
+        setType(response.data.type.id);
 
         setTimeout(() => {
           file_no.current!.value = response.data!.file_no;
@@ -117,11 +137,6 @@ const ViewFile = (props: ViewFileProps) => {
         }, 2000);
       } else {
         toast.error(response.message);
-      }
-
-      const villages_response = await getVillage({});
-      if (villages_response.status) {
-        setVillages(villages_response.data!);
       }
 
       setLoading(false);
@@ -144,6 +159,7 @@ const ViewFile = (props: ViewFileProps) => {
       applicant_name: applicant_name.current!.value,
       survey_number: survey.current!.value,
       villageId: village,
+      typeId: type,
     });
     // referenceNumbers: referenceNumbers,
     // names: names,
@@ -163,6 +179,7 @@ const ViewFile = (props: ViewFileProps) => {
         survey_number: result.output.survey_number,
         villageId: result.output.villageId,
         user_id: props.id,
+        typeId: result.output.typeId,
         ...(remark.current!.value && { remarks: remark.current!.value }),
       });
 
@@ -230,7 +247,26 @@ const ViewFile = (props: ViewFileProps) => {
             <label htmlFor="fileid" className="w-60">
               File Type :
             </label>
-            <p>{filedata.type.name}</p>
+            <Select
+              value={type.toString()}
+              onValueChange={(val) => {
+                setType(parseInt(val));
+              }}
+            >
+              <SelectTrigger className="">
+                <SelectValue placeholder="Select File Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>File Types</SelectLabel>
+                  {types.map((val) => (
+                    <SelectItem key={val.id} value={val.id.toString()}>
+                      {val.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex gap-2 items-center mt-4">
             <label htmlFor="fileid" className="w-60">
