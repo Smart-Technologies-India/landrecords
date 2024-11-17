@@ -599,8 +599,7 @@ const ViewFile = (props: ViewFileProps) => {
                     }
                     setDates("");
                     await initdata();
-                  }
-
+                  }                  
                   setDates((val) => e.target.value);
                 }}
                 placeholder={"Enter Date"}
