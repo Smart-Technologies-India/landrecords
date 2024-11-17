@@ -2,6 +2,7 @@
 "use client";
 import getFileType from "@/actions/getfiletype";
 import getVillage from "@/actions/getvillage";
+import IdFileSearch from "@/actions/idsearchfile";
 import fileSearch from "@/actions/searchfile";
 import GetUser from "@/actions/user/getuser";
 import logout from "@/actions/user/logout";
@@ -74,31 +75,31 @@ const SearchAdmin = (props: HomeProps) => {
     init();
   }, []);
 
-  const [fileType, setFileType] = useState<number>(0);
-  const [village, setVillage] = useState<number>(0);
+  // const [fileType, setFileType] = useState<number>(0);
+  // const [village, setVillage] = useState<number>(0);
 
   const file_id = useRef<HTMLInputElement>(null);
-  const file_no = useRef<HTMLInputElement>(null);
-  const applicant_name = useRef<HTMLInputElement>(null);
-  const survey = useRef<HTMLInputElement>(null);
-  const year = useRef<HTMLInputElement>(null);
-  const adhar = useRef<HTMLInputElement>(null);
-  const fileref = useRef<HTMLInputElement>(null);
-  const dates = useRef<HTMLInputElement>(null);
-  const remark = useRef<HTMLTextAreaElement>(null);
+  // const file_no = useRef<HTMLInputElement>(null);
+  // const applicant_name = useRef<HTMLInputElement>(null);
+  // const survey = useRef<HTMLInputElement>(null);
+  // const year = useRef<HTMLInputElement>(null);
+  // const adhar = useRef<HTMLInputElement>(null);
+  // const fileref = useRef<HTMLInputElement>(null);
+  // const dates = useRef<HTMLInputElement>(null);
+  // const remark = useRef<HTMLTextAreaElement>(null);
 
   const search = async () => {
     setSearching(true);
-    const filesearch: ApiResponseType<file[] | null> = await fileSearch({
+    const filesearch: ApiResponseType<file[] | null> = await IdFileSearch({
       file_id: file_id.current?.value,
-      file_no: file_no.current?.value,
-      applicant_name: applicant_name.current?.value,
-      survey_number: survey.current?.value,
-      year: year.current?.value,
-      aadhar: adhar.current?.value,
-      remarks: remark.current?.value,
-      typeId: fileType,
-      villageId: village,
+      // file_no: file_no.current?.value,
+      // applicant_name: applicant_name.current?.value,
+      // survey_number: survey.current?.value,
+      // year: year.current?.value,
+      // aadhar: adhar.current?.value,
+      // remarks: remark.current?.value,
+      // typeId: fileType,
+      // villageId: village,
     });
 
     if (filesearch.status) {
@@ -151,7 +152,7 @@ const SearchAdmin = (props: HomeProps) => {
             ref={file_id}
           />
         </div>
-        <div className="flex gap-2 items-center mt-4">
+        {/* <div className="flex gap-2 items-center mt-4">
           <label htmlFor="file_no" className="w-60">
             File No :
           </label>
@@ -277,7 +278,7 @@ const SearchAdmin = (props: HomeProps) => {
             className="h-24 resize-none"
             ref={remark}
           />
-        </div>
+        </div> */}
       </Card>
 
       {isSearching ? (
