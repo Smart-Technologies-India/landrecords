@@ -130,11 +130,19 @@ const ViewFile = (props: ViewFileProps) => {
         setType(response.data.type.id);
 
         setTimeout(() => {
-          file_no.current!.value = response.data!.file_no;
-          applicant_name.current!.value = response.data!.applicant_name;
-          survey.current!.value = response.data!.survey_number;
-          remark.current!.value = response.data!.remarks;
-        }, 2000);
+          if (file_no && file_no.current) {
+            file_no.current!.value = response.data!.file_no;
+          }
+          if (applicant_name && applicant_name.current) {
+            applicant_name.current!.value = response.data!.applicant_name;
+          }
+          if (survey && survey.current) {
+            survey.current!.value = response.data!.survey_number;
+          }
+          if (remark && remark.current) {
+            remark.current!.value = response.data!.remarks;
+          }
+        }, 1000);
       } else {
         toast.error(response.message);
       }
