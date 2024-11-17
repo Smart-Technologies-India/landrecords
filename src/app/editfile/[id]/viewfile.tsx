@@ -422,7 +422,7 @@ const ViewFile = (props: ViewFileProps) => {
                 onChange={async (e) => {
                   let val = e.target.value;
                   if (val.includes("`")) {
-                    val = val.slice(0, -1);
+                    val = val.replace("`", "");
                     if (val == null || val == undefined || val == "") {
                       return toast.error("Empty field is not allowed");
                     }
@@ -471,7 +471,7 @@ const ViewFile = (props: ViewFileProps) => {
                 onChange={async (e) => {
                   let val = e.target.value;
                   if (val.includes("`")) {
-                    val = val.slice(0, -1);
+                    val = val.replace("`", "");
                     if (val == null || val == undefined || val == "") {
                       return toast.error("Empty field is not allowed");
                     }
@@ -520,7 +520,7 @@ const ViewFile = (props: ViewFileProps) => {
                 onChange={async (e) => {
                   let val = e.target.value;
                   if (val.includes("`")) {
-                    val = val.slice(0, -1);
+                    val = val.replace("`", "");
                     if (val == null || val == undefined || val == "") {
                       return toast.error("Empty field is not allowed");
                     }
@@ -570,7 +570,7 @@ const ViewFile = (props: ViewFileProps) => {
                 onChange={async (e) => {
                   let val = e.target.value;
                   if (val.includes("`")) {
-                    val = val.slice(0, -1);
+                    val = val.replace("`", "");
                     if (val == null || val == undefined || val == "") {
                       return toast.error("Empty field is not allowed");
                     }
