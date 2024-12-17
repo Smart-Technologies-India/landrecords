@@ -8,7 +8,6 @@ import {
   AntDesignPlusCircleOutlined,
   Fa6SolidXmark,
   FluentMdl2Search,
-  IcBaselineCalendarMonth,
 } from "@/components/icons";
 import {
   Table,
@@ -176,7 +175,7 @@ const CreateAccountPage = () => {
             <Table className="mt-2">
               <TableHeader className="bg-gray-100">
                 <TableRow>
-                  <TableHead className="w-[100px] p-2">Sr. NO</TableHead>
+                  <TableHead className="w-[100px] p-2">InWard Number</TableHead>
                   <TableHead className="p-2">Holder Name</TableHead>
                   <TableHead className="p-2">Residence Place</TableHead>
                   <TableHead className="p-2">Celiling</TableHead>
@@ -190,14 +189,13 @@ const CreateAccountPage = () => {
                 ).map((val: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium p-2">
-                      {val.sr_no}
+                      {val.inward_number}
                     </TableCell>
                     <TableCell className="p-2">{val.holder_name}</TableCell>
                     <TableCell className="p-2">{val.residence_place}</TableCell>
                     <TableCell className="p-2">
                       {val.celiling_applicable}
                     </TableCell>
-
                     <TableCell className="flex gap-2 p-2">
                       {["LDC", "SUPTD"].includes(userdata?.role!) && (
                         <Button

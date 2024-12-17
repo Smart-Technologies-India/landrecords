@@ -6,6 +6,7 @@ import {
   string,
   pipe,
   nullish,
+  regex,
 } from "valibot";
 
 const Form1FamilySchema = object({
@@ -29,8 +30,12 @@ const Form1LandSchema = object({
     string("Please enter survey no."),
     minLength(1, "Please enter survey no.")
   ),
-  area: pipe(string("Please enter area."), minLength(1, "Please enter area.")),
-  remark: nullable(string()),
+  area: pipe(
+    string("Please enter area."),
+    minLength(1, "Please enter area."),
+    regex(/^0-\d{2}\.\d{2}$/, "Enter valid formate or area ex:- 0-12.34")
+  ),
+  remark: nullish(string()),
 });
 
 type Form1LandForm = InferInput<typeof Form1LandSchema>;
@@ -45,19 +50,27 @@ const Form1AcquisitionSchema = object({
     string("Please enter survey no."),
     minLength(1, "Please enter survey no.")
   ),
-  area: pipe(string("Please enter area."), minLength(1, "Please enter area.")),
+  area: pipe(
+    string("Please enter area."),
+    minLength(1, "Please enter area."),
+    regex(/^0-\d{2}\.\d{2}$/, "Enter valid formate or area ex:- 0-12.34")
+  ),
   type: pipe(string("Please enter type."), minLength(1, "Please enter type.")),
   date: pipe(string("Please enter data."), minLength(1, "Please enter data.")),
-  remark: nullable(string()),
+  remark: nullish(string()),
 });
 
 type Form1AcquisitionForm = InferInput<typeof Form1AcquisitionSchema>;
 export { Form1AcquisitionSchema, type Form1AcquisitionForm };
 
 const Form1Schema = object({
-  sr_no: pipe(
-    string("Please enter sr number."),
-    minLength(1, "Please enter sr number.")
+  inward_number: pipe(
+    string("Please enter survey no."),
+    minLength(1, "Please enter survey no.")
+  ),
+  date_of_inward: pipe(
+    string("Select Date off inward."),
+    minLength(1, "Select Date off inward.")
   ),
   holder_name: pipe(
     string("Please enter Holder name."),
@@ -67,10 +80,10 @@ const Form1Schema = object({
     string("Please enter residence Place."),
     minLength(1, "Please enter residence Place.")
   ),
-  celiling_applicable: pipe(
-    string("Please enter celiling applicable."),
-    minLength(1, "Please enter celiling applicable.")
-  ),
+  // celiling_applicable: pipe(
+  //   string("Please enter celiling applicable."),
+  //   minLength(1, "Please enter celiling applicable.")
+  // ),
   action: nullish(string()),
   remark: nullish(string()),
 });

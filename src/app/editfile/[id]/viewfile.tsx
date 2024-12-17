@@ -103,7 +103,6 @@ const ViewFile = (props: ViewFileProps) => {
   };
 
   useEffect(() => {
-    console.log("working fine");
     const init = async () => {
       setLoading(true);
 

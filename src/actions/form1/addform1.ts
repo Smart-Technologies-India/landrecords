@@ -22,7 +22,8 @@ interface Form1AcquisitionType {
 }
 
 interface AddForm1Payload {
-  sr_no: string;
+  inward_number: string;
+  date_of_inward: string;
   holder_name: string;
   residence_place: string;
   celiling_applicable: string;
@@ -44,7 +45,8 @@ const AddFrom1 = async (
   try {
     const form1_response: form1 = await prisma.form1.create({
       data: {
-        sr_no: payload.sr_no,
+        inward_number: payload.inward_number,
+        date_of_inward: payload.date_of_inward,
         holder_name: payload.holder_name,
         residence_place: payload.residence_place,
         celiling_applicable: payload.celiling_applicable,

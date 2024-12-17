@@ -48,6 +48,30 @@ const AddRecord = () => {
     };
     init();
   }, [id]);
+  function sumAreasFromForm(form1_land: any[]): string {
+    let totalWhole = 0; // Total for the whole number part
+    let totalDecimal = 0; // Total for the decimal part
+
+    // Loop through the form1_land array and sum the areas
+    form1_land.forEach((entry) => {
+      const area = entry.area;
+      const [, whole, decimal] = area.match(/^0-(\d{2})\.(\d{2})$/) || [];
+      if (whole && decimal) {
+        totalWhole += parseInt(whole, 10); // Add the whole part
+        totalDecimal += parseInt(decimal, 10); // Add the decimal part
+      }
+    });
+
+    // Handle decimal overflow
+    totalWhole += Math.floor(totalDecimal / 100);
+    totalDecimal = totalDecimal % 100;
+
+    // Format the result with two digits
+    const result = `0-${String(totalWhole).padStart(2, "0")}.${String(
+      totalDecimal
+    ).padStart(2, "0")}`;
+    return result;
+  }
 
   if (isLoading)
     return (
@@ -61,9 +85,17 @@ const AddRecord = () => {
         <p className="text-xl font-medium leading-6 mb-2">Form-1</p>
         <div className="flex gap-2 justify-between">
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
-            <p className="text-xs">Sr No.</p>
+            <p className="text-xs">Inward Number.</p>
             <p className="text-sm leading-4 font-semibold">
-              {form1data && form1data.sr_no}
+              {form1data && form1data.inward_number}
+            </p>
+          </div>
+          <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
+            <p className="text-xs">Inward Date.</p>
+            <p className="text-sm leading-4 font-semibold">
+              {form1data &&
+                form1data.date_of_inward &&
+                formateDate(new Date(form1data.date_of_inward.toString()))}
             </p>
           </div>
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
@@ -178,6 +210,17 @@ const AddRecord = () => {
                   </TableCell>
                 </TableRow>
               ))}
+            {form1data && (
+              <TableRow>
+                <TableCell className="p-2 border text-left"></TableCell>
+                <TableCell className="p-2 border text-left"></TableCell>
+                <TableCell className="p-2 border text-center">Total</TableCell>
+                <TableCell className="p-2 border text-center">
+                  {sumAreasFromForm(form1data.form1_land)}
+                </TableCell>
+                <TableCell className="p-2 border text-center"></TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
 
@@ -233,6 +276,19 @@ const AddRecord = () => {
                   </TableRow>
                 )
               )}
+            {form1data && (
+              <TableRow>
+                <TableCell className="p-2 border text-left"></TableCell>
+                <TableCell className="p-2 border text-center">Total</TableCell>
+                <TableCell className="p-2 border text-center">
+                  {sumAreasFromForm(form1data.form1_acquisition)}
+                </TableCell>
+                <TableCell className="p-2 border text-center"></TableCell>
+                <TableCell className="p-2 border text-center"></TableCell>
+                <TableCell className="p-2 border text-center"></TableCell>
+                <TableCell className="p-2 border text-center"></TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import getFrom1 from "@/actions/form1/getform1";
 
@@ -57,6 +58,25 @@ const AddRecord = () => {
       form1_land: form1_land[];
     }
   >();
+  interface DataType {
+    inward: string;
+    inward_date: Date | null;
+    name: string;
+    place: string;
+    ceiling: string;
+    remark: string;
+    action: string;
+  }
+
+  const [data, setData] = useState<DataType>({
+    action: "",
+    ceiling: "",
+    inward: "",
+    inward_date: null,
+    name: "",
+    place: "",
+    remark: "",
+  });
 
   const init = async () => {
     const response = await getFrom1({
@@ -64,6 +84,15 @@ const AddRecord = () => {
     });
     if (response.status && response.data) {
       setForm1Data(response.data);
+      setData({
+        action: response.data.action ?? "",
+        remark: response.data.remark ?? "",
+        ceiling: response.data.celiling_applicable ?? "",
+        inward: response.data.inward_number ?? "",
+        name: response.data.holder_name ?? "",
+        place: response.data.residence_place ?? "",
+        inward_date: data.inward_date,
+      });
     }
   };
 
@@ -76,11 +105,20 @@ const AddRecord = () => {
       });
       if (response.status && response.data) {
         setForm1Data(response.data);
+        setData({
+          action: response.data.action ?? "",
+          remark: response.data.remark ?? "",
+          ceiling: response.data.celiling_applicable ?? "",
+          inward: response.data.inward_number ?? "",
+          name: response.data.holder_name ?? "",
+          place: response.data.residence_place ?? "",
+          inward_date: new Date(response.data.date_of_inward!),
+        });
       }
       setIsLoading(false);
     };
     init();
-  }, [id]);
+  }, []);
 
   if (isLoading)
     return (
@@ -92,20 +130,21 @@ const AddRecord = () => {
   return (
     <div className="p-2 mt-2">
       <div className="bg-white p-2 shadow mt-2">
-        <EditFrom1Provider
-          form1_family={form1_family}
-          form1_land={form1_land}
-          form1_acquisition={form1_acquisition}
-          form1_family_data={form1data ? form1data.form1_family : []}
-          form1_land_data={form1data ? form1data.form1_land : []}
-          form1_acquisition_data={form1data ? form1data.form1_acquisition : []}
-          id={id}
-        />
+        <h1 className="text-center text-xl font-semibold">FORM 1</h1>
+        <p className="text-center texxt-lg">(See Rule 6 (I))</p>
+        <p className="text-left text-sm mt-4">
+          Statement to be furnished under sub-section (2) of section 11 of the
+          Dadra and Nagar Haveli Land Reforms Regulation, 1971.
+        </p>
+        <div className="mt-4"></div>
+        <EditFrom1Provider data={data} setData={setData} />
         <EditFrom1FamilyProvide
           form1_family={form1_family}
           setform1_family={setform1_family}
           form1_family_data={form1data ? form1data.form1_family : []}
           init={init}
+          data={data}
+          setData={setData}
         />
         <EditFrom1LandProvide
           form1_land={form1_land}
@@ -114,10 +153,17 @@ const AddRecord = () => {
           init={init}
         />
         <EditFrom1AcquisitionProvide
+          id={id}
+          form1_family={form1_family}
+          form1_land={form1_land}
           form1_acquisition={form1_acquisition}
-          setform1_acquisition={setform1_acquisition}
+          form1_family_data={form1data ? form1data.form1_family : []}
+          form1_land_data={form1data ? form1data.form1_land : []}
           form1_acquisition_data={form1data ? form1data.form1_acquisition : []}
+          setform1_acquisition={setform1_acquisition}
           init={init}
+          data={data}
+          setData={setData}
         />
       </div>
     </div>

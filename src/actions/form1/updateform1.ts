@@ -23,7 +23,6 @@ interface Form1AcquisitionType {
 
 interface UpdateForm1Payload {
   id: number;
-  sr_no: string;
   holder_name: string;
   residence_place: string;
   celiling_applicable: string;
@@ -32,6 +31,10 @@ interface UpdateForm1Payload {
   form1_family: Form1FamilyType[];
   form1_land: Form1LandType[];
   form1_acquisition: Form1AcquisitionType[];
+  inward_number: string;
+  date_of_inward: string;
+  url?: string;
+  action_taken?: boolean;
 }
 
 import { errorToString } from "@/utils/methods";
@@ -62,7 +65,8 @@ const UpdateFrom1 = async (
         id: isexist.id,
       },
       data: {
-        sr_no: payload.sr_no,
+        inward_number: payload.inward_number,
+        date_of_inward: payload.date_of_inward,
         holder_name: payload.holder_name,
         residence_place: payload.residence_place,
         celiling_applicable: payload.celiling_applicable,
@@ -72,6 +76,12 @@ const UpdateFrom1 = async (
         }),
         ...(payload.remark && {
           remark: payload.remark,
+        }),
+        ...(payload.url && {
+          url: payload.url,
+        }),
+        ...(payload.action_taken && {
+          action_taken: payload.action_taken,
         }),
       },
     });
