@@ -80,7 +80,7 @@ interface DataType {
   place: string;
   ceiling: string;
   remark: string;
-  action: string;
+  // action: string;
 }
 
 type EditFrom1ProviderProps = {
@@ -967,6 +967,7 @@ const Form1AcquisitionEntry = (props: EditFrom1AcquisitionProviderProps) => {
   }, [props.id]);
 
   const addData = async () => {
+    console.log(props.data);
     if (
       props.data.inward == "" ||
       props.data.inward == null ||
@@ -1000,12 +1001,12 @@ const Form1AcquisitionEntry = (props: EditFrom1AcquisitionProviderProps) => {
     )
       return toast.error("Enter Ceiling applicable to holder/family.");
 
-    if (
-      props.data.action == "" ||
-      props.data.action == null ||
-      props.data.action == undefined
-    )
-      return toast.error("Enter Action.");
+    // if (
+    //   props.data.action == "" ||
+    //   props.data.action == null ||
+    //   props.data.action == undefined
+    // )
+    //   return toast.error("Enter Action.");
     if (
       props.data.remark == "" ||
       props.data.remark == null ||
@@ -1053,7 +1054,7 @@ const Form1AcquisitionEntry = (props: EditFrom1AcquisitionProviderProps) => {
       remark: props.data.remark,
       date_of_inward: props.data.inward_date.toISOString(),
       inward_number: props.data.inward,
-      action: props.data.action,
+      action: isActionTaken ? "YES" : "NO",
       action_taken: isActionTaken,
       url: url ?? undefined,
     });

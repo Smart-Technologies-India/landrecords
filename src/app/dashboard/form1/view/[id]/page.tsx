@@ -218,7 +218,6 @@ const AddRecord = () => {
                 <TableCell className="p-2 border text-center">
                   {sumAreasFromForm(form1data.form1_land)}
                 </TableCell>
-                <TableCell className="p-2 border text-center"></TableCell>
               </TableRow>
             )}
           </TableBody>
