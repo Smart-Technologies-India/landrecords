@@ -65,11 +65,9 @@ const AddRecord = () => {
     place: string;
     ceiling: string;
     remark: string;
-    action: string;
   }
 
   const [data, setData] = useState<DataType>({
-    action: "",
     ceiling: "",
     inward: "",
     inward_date: null,
@@ -85,7 +83,6 @@ const AddRecord = () => {
     if (response.status && response.data) {
       setForm1Data(response.data);
       setData({
-        action: response.data.action ?? "",
         remark: response.data.remark ?? "",
         ceiling: response.data.celiling_applicable ?? "",
         inward: response.data.inward_number ?? "",
@@ -106,7 +103,6 @@ const AddRecord = () => {
       if (response.status && response.data) {
         setForm1Data(response.data);
         setData({
-          action: response.data.action ?? "",
           remark: response.data.remark ?? "",
           ceiling: response.data.celiling_applicable ?? "",
           inward: response.data.inward_number ?? "",
