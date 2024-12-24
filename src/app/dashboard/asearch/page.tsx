@@ -43,6 +43,7 @@ const ASearch = () => {
     FILETYPE_USER,
     FILETEYPE_YEAR,
     VILLAGE_YEAR,
+    REF_NO,
   }
   const router = useRouter();
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -82,6 +83,7 @@ const ASearch = () => {
   const applicant_name = useRef<HTMLInputElement>(null);
   const survey = useRef<HTMLInputElement>(null);
   const year = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
 
   const searchItems = async () => {
     setIsSearching(true);
@@ -251,6 +253,25 @@ const ASearch = () => {
       } else {
         toast.error(filesearch.message);
       }
+    } else if (searchtype === SearchType.REF_NO) {
+      if (!ref.current?.value || ref.current?.value === "") {
+        toast.error("Ref No is required");
+        setIsSearching(false);
+
+        return;
+      }
+      const filesearch: ApiResponseType<file[] | null> = await ASearchFile({
+        file_ref: ref.current?.value,
+        searchtype: SearchType.REF_NO,
+      });
+
+      if (filesearch.status) {
+        setSearchData(filesearch.data!);
+        setSearch(true);
+        toast.success("File search completed");
+      } else {
+        toast.error(filesearch.message);
+      }
     }
     setIsSearching(false);
   };
@@ -351,6 +372,9 @@ const ASearch = () => {
                   if (val == SearchType.VILLAGE_YEAR.toString()) {
                     setSearchType(SearchType.VILLAGE_YEAR);
                   }
+                  if (val == SearchType.REF_NO.toString()) {
+                    setSearchType(SearchType.REF_NO);
+                  }
                 }}
               >
                 <SelectTrigger className="">
@@ -376,6 +400,9 @@ const ASearch = () => {
                     </SelectItem>
                     <SelectItem value={SearchType.VILLAGE_YEAR.toString()}>
                       Village/Year
+                    </SelectItem>
+                    <SelectItem value={SearchType.REF_NO.toString()}>
+                      File Ref No
                     </SelectItem>
                   </SelectGroup>
                 </SelectContent>
@@ -488,6 +515,21 @@ const ASearch = () => {
                 name="year"
                 ref={year}
                 onChange={handleNumberChange}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
+          {searchtype === SearchType.REF_NO ? (
+            <div className="flex gap-2 items-center  mt-4">
+              <label htmlFor="year" className="w-44 text-right">
+                Ref No :
+              </label>
+              <Input
+                placeholder="Enter File Ref"
+                id="ref"
+                name="ref"
+                ref={ref}
               />
             </div>
           ) : (

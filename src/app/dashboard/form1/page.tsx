@@ -215,7 +215,7 @@ const CreateAccountPage = () => {
                           }}
                           className="text-white bg-blue-500 hover:bg-blue-600 hover:-translate-y-1 transition-all duration-500 rounded-sm px-2 h-8 text-sm flex items-center gap-2  font-medium py-2"
                         >
-                          Edit
+                          FORM II
                         </Button>
                       )}
                     </TableCell>

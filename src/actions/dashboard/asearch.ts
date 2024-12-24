@@ -7,6 +7,7 @@ enum SearchType {
   FILETYPE_USER,
   FILETEYPE_YEAR,
   VILLAGE_YEAR,
+  REF_NO
 }
 
 interface ASearchFilePayload {
