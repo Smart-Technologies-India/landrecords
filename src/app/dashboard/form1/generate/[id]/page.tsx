@@ -6,7 +6,7 @@ import {
   form1_family,
   form1_land,
 } from "@prisma/client";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -23,8 +23,12 @@ import { Button as ShButton } from "@/components/ui/button";
 import { Input } from "antd";
 import { Input as ShInput } from "@/components/ui/input";
 import { toast } from "react-toastify";
+import uploadFile from "@/actions/upload";
+import UpdateFrom1 from "@/actions/form1/updateform1";
+import UpdateFrom1Gen from "@/actions/form1/updateform1gen";
 
 const AddRecord = () => {
+  const router = useRouter();
   const params = useParams();
   const id: number = parseInt(
     Array.isArray(params.id) ? params.id[0] : params.id
@@ -115,6 +119,53 @@ const AddRecord = () => {
       } else {
         toast.error("File size must be less than 5 MB.", { theme: "light" });
       }
+    }
+  };
+
+  const addData = async () => {
+    if (!form1data) return toast.error("There is no form exist");
+
+    if (isActionTaken == null || isActionTaken == undefined)
+      return toast.error("Enter Action.");
+    if (remark == "" || remark == null || remark == undefined)
+      return toast.error("Enter remark.");
+
+    if (form1data!.form1_acquisition.length < 0)
+      return toast.error("Add Acquisition.");
+
+    if (isActionTaken == null) return toast.error("Select Action Taken.");
+
+    let url: string | null = null;
+
+    if (isActionTaken) {
+      if (file == null) {
+        return toast.error("Upload file.");
+      } else {
+        const formdata = new FormData();
+        formdata.append("file", file);
+
+        const response = await uploadFile(formdata);
+
+        if (typeof response == "string") {
+          url = response;
+        } else {
+          return toast.error("File Upload Faild.");
+        }
+      }
+    }
+
+    const response = await UpdateFrom1Gen({
+      id: form1data.id,
+      action: isActionTaken ? "YES" : "NO",
+      action_taken: isActionTaken,
+      url: url ?? undefined,
+    });
+
+    if (response.status) {
+      toast.success("Form 1 Updated successfully");
+      router.back();
+    } else {
+      toast.error(response.message);
     }
   };
 
@@ -456,6 +507,13 @@ const AddRecord = () => {
 
         <div className="w-full flex gap-2 mt-2">
           <div className="grow"></div>
+          <button
+            type="submit"
+            onClick={addData}
+            className="py-1 rounded-md bg-blue-500 px-4 text-sm text-white cursor-pointer"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>

@@ -75,37 +75,7 @@ const AddRecord = () => {
     ).padStart(2, "0")}`;
     return result;
   }
-  
-  function sumAreasFromForm2(
-    form1_land: any[],
-    form1_land_data: any[]
-  ): string {
-    let totalWhole = 0; // Total for the whole number part
-    let totalDecimal = 0; // Total for the decimal part
 
-    // Combine the areas from form1_land and form1_land_data
-    const combinedAreas = [...form1_land, ...form1_land_data];
-
-    // Loop through the combined array and sum the areas
-    combinedAreas.forEach((entry) => {
-      const area = entry.area;
-      const [, whole, decimal] = area.match(/^0-(\d{2})\.(\d{2})$/) || [];
-      if (whole && decimal) {
-        totalWhole += parseInt(whole, 10); // Add the whole part
-        totalDecimal += parseInt(decimal, 10); // Add the decimal part
-      }
-    });
-
-    // Handle decimal overflow
-    totalWhole += Math.floor(totalDecimal / 100);
-    totalDecimal = totalDecimal % 100;
-
-    // Format the result with two digits
-    const result = `0-${String(totalWhole).padStart(2, "0")}.${String(
-      totalDecimal
-    ).padStart(2, "0")}`;
-    return result;
-  }
   if (isLoading)
     return (
       <div className="h-screen w-full grid place-items-center text-3xl text-gray-600 bg-gray-200">
@@ -171,10 +141,9 @@ const AddRecord = () => {
         </div>
 
         <p className="text-[#162e57] text-sm mt-2">
-          4. Area of land held prior to acquisition .. (
-          {sumAreasFromForm(form1data ? form1data.form1_land : [])}) HA
+          4. Area of land held prior to acquisition
         </p>
-        {/* <Table className="border mt-2">
+        <Table className="border mt-2">
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead className="whitespace-nowrap w-10 border text-center p-1 h-8">
@@ -211,7 +180,7 @@ const AddRecord = () => {
               ))}
             {form1data && (
               <TableRow>
-              <TableCell className="p-2 border text-left"></TableCell> 
+                <TableCell className="p-2 border text-left"></TableCell>
                 <TableCell className="p-2 border text-left"></TableCell>
                 <TableCell className="p-2 border text-center">Total</TableCell>
                 <TableCell className="p-2 border text-center">
@@ -220,20 +189,16 @@ const AddRecord = () => {
               </TableRow>
             )}
           </TableBody>
-        </Table> */}
+        </Table>
         <p className="text-[#162e57] text-sm mt-2">
-          5. Area of land acquired (under this applicaton) ... (
-          {sumAreasFromForm(form1data ? form1data.form1_acquisition : [])}) HA
-        </p>
-        <p className="text-[#162e57] text-sm mt-2">
-          6. Particular of land acquired
+          5. Area of land acquired (under this applicaton)
         </p>
         <Table className="border mt-2">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              {/* <TableHead className="whitespace-nowrap w-10 border text-center p-1 h-8">
+              <TableHead className="whitespace-nowrap w-10 border text-center p-1 h-8">
                 No
-              </TableHead> */}
+              </TableHead>
               <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-96">
                 Village
               </TableHead>
@@ -243,54 +208,22 @@ const AddRecord = () => {
               <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-32">
                 Area
               </TableHead>
-              {/* <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-32">
+              <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-32">
                 Type
               </TableHead>
               <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-32">
                 Date
-              </TableHead> */}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {form1data &&
-              form1data.form1_land.map((val: form1_land, index: number) => (
-                <TableRow key={index}>
-                  {/* <TableCell className="p-2 border text-left">
-                    {index + 1}
-                  </TableCell> */}
-                  <TableCell className="p-2 border text-left">
-                    {val.village}
-                  </TableCell>
-                  <TableCell className="p-2 border text-center">
-                    {val.survey_no}
-                  </TableCell>
-                  <TableCell className="p-2 border text-center">
-                    {val.area}
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            {form1data && (
-              <TableRow>
-                {/* <TableCell className="p-2 border text-left"></TableCell> */}
-                <TableCell className="p-2 border text-center">
-                  Area After acquisition
-                </TableCell>
-                <TableCell className="p-2 border text-center">Total</TableCell>
-                <TableCell className="p-2 border text-center">
-                  {sumAreasFromForm(form1data.form1_land)}
-                </TableCell>
-                {/* <TableCell className="p-2 border text-center"></TableCell> */}
-                {/* <TableCell className="p-2 border text-center"></TableCell> */}
-              </TableRow>
-            )}
-            {form1data &&
               form1data.form1_acquisition.map(
                 (val: form1_acquisition, index: number) => (
                   <TableRow key={index}>
-                    {/* <TableCell className="p-2 border text-left">
+                    <TableCell className="p-2 border text-left">
                       {index + 1}
-                    </TableCell> */}
+                    </TableCell>
                     <TableCell className="p-2 border text-left">
                       {val.village}
                     </TableCell>
@@ -300,51 +233,31 @@ const AddRecord = () => {
                     <TableCell className="p-2 border text-center">
                       {val.area}
                     </TableCell>
-                    {/* <TableCell className="p-2 border text-center">
+                    <TableCell className="p-2 border text-center">
                       {val.type}
                     </TableCell>
                     <TableCell className="p-2 border text-center">
                       {formateDate(val.date)}
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                 )
               )}
             {form1data && (
               <TableRow>
-                {/* <TableCell className="p-2 border text-left"></TableCell> */}
-                <TableCell className="p-2 border text-center">
-                  Area Before acquisition
-                </TableCell>
+                <TableCell className="p-2 border text-left"></TableCell>
+                <TableCell className="p-2 border text-center"></TableCell>
                 <TableCell className="p-2 border text-center">Total</TableCell>
                 <TableCell className="p-2 border text-center">
                   {sumAreasFromForm(form1data.form1_acquisition)}
                 </TableCell>
-                {/* <TableCell className="p-2 border text-center"></TableCell> */}
-                {/* <TableCell className="p-2 border text-center"></TableCell> */}
-              </TableRow>
-            )}
-
-            {form1data && (
-              <TableRow>
-                {/* <TableCell className="p-2 border text-left"></TableCell> */}
                 <TableCell className="p-2 border text-center"></TableCell>
-                <TableCell className="p-2 border text-center">
-                  Grand Total
-                </TableCell>
-                <TableCell className="p-2 border text-center">
-                  {sumAreasFromForm2(
-                    form1data.form1_acquisition,
-                    form1data.form1_land
-                  )}
-                </TableCell>
-                {/* <TableCell className="p-2 border text-center"></TableCell> */}
-                {/* <TableCell className="p-2 border text-center"></TableCell> */}
+                <TableCell className="p-2 border text-center"></TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
 
-        {/* <p className="text-[#162e57] text-sm mt-2">
+        <p className="text-[#162e57] text-sm mt-2">
           6. Names of members of family and relationship to holder
         </p>
         <Table className="border mt-2">
@@ -383,7 +296,7 @@ const AddRecord = () => {
                 </TableRow>
               ))}
           </TableBody>
-        </Table> */}
+        </Table>
 
         <div className="flex gap-2 justify-between mt-2">
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
