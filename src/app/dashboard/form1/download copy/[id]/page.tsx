@@ -58,9 +58,10 @@ const AddRecord = () => {
     // Loop through the form1_land array and sum the areas
     form1_land.forEach((entry) => {
       const area = entry.area;
-      const [, whole, decimal] = area.match(/^0-(\d{2})\.(\d{2})$/) || [];
-      if (whole && decimal) {
-        totalWhole += parseInt(whole, 10); // Add the whole part
+      const [, prefix, whole, decimal] =
+        area.match(/^(\d+)-(\d{2})\.(\d{2})$/) || [];
+      if (prefix && whole && decimal) {
+        totalWhole += parseInt(prefix + whole, 10); // Add the whole part including the prefix
         totalDecimal += parseInt(decimal, 10); // Add the decimal part
       }
     });
@@ -69,10 +70,15 @@ const AddRecord = () => {
     totalWhole += Math.floor(totalDecimal / 100);
     totalDecimal = totalDecimal % 100;
 
+    // Extract the new prefix and whole parts
+    const prefixPart = Math.floor(totalWhole / 100); // Determine the new prefix
+    const wholePart = totalWhole % 100; // Remaining whole number part
+
     // Format the result with two digits
-    const result = `0-${String(totalWhole).padStart(2, "0")}.${String(
-      totalDecimal
-    ).padStart(2, "0")}`;
+    const result = `${prefixPart}-${String(wholePart).padStart(
+      2,
+      "0"
+    )}.${String(totalDecimal).padStart(2, "0")}`;
     return result;
   }
 
