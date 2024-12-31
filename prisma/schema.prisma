@@ -162,6 +162,7 @@ model physical_file_location {
 model form1 {
   id                  Int                 @id @default(autoincrement())
   inward_number       String?
+  sr_number           String?
   date_of_inward      String?
   holder_name         String
   residence_place     String
@@ -169,6 +170,7 @@ model form1 {
   action              String?
   remark              String?
   url                 String?
+  file                String?
   action_taken        Boolean?
   status              Status              @default(ACTIVE)
   createdAt           DateTime            @default(now())

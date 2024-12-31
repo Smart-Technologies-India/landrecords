@@ -5,11 +5,17 @@ interface NavbarProps {
   setIsOpen: (arg: (val: boolean) => boolean) => void;
   name: string;
   role: string;
+  isbluck: boolean;
 }
 
 const Navbar = (props: NavbarProps) => {
   return (
-    <nav className="py-1 px-4 w-full bg-[#f0f1f5] flex items-center gap-2">
+    <nav 
+    className="py-1 px-4 w-full bg-[#f0f1f5] flex items-center gap-2"
+    // className={`py-1 px-4 w-full hidden-print  ${
+    //   !props.isbluck ? "md:ml-52 md:w-[calc(100%-13rem)]" : ""
+    // } bg-white  flex items-center gap-2 shadow fixed top-0 left-0 z-10`}
+    >
       <div className="md:hidden">
         {props.isOpen ? (
           <MaterialSymbolsCloseSmall

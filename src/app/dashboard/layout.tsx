@@ -5,15 +5,22 @@ import { useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
 import { Role, user } from "@prisma/client";
 import GetUser from "@/actions/user/getuser";
+import { useSearchParams } from "next/navigation";
 
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const searchParams = useSearchParams();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [userdata, setUpser] = useState<user>();
   const [isLoading, setLoading] = useState<boolean>(true);
+
+  const [isbluck, setBluck] = useState<boolean>(
+    searchParams.get("sidebar") == "no" ? true : false
+  );
 
   useEffect(() => {
     const init = async () => {
@@ -38,18 +45,30 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen w-full bg-[#f5f6f8] relative">
-      <Sidebar
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        role={userdata?.role as Role}
-      />
-      <div className="relative p-0 md:pl-52">
-        <Navbar
+      {!isbluck && (
+        <Sidebar
           isOpen={isOpen}
           setIsOpen={setIsOpen}
-          name={userdata?.username ?? ""}
-          role={userdata?.role.toString() ?? ""}
-        ></Navbar>
+          role={userdata?.role as Role}
+        />
+      )}
+
+      <div
+        // className="relative p-0 md:pl-52"
+        className={`relative p-0 ${
+          !isbluck ? "md:pl-52" : ""
+        }  min-h-screen flex flex-col`}
+      >
+        {!isbluck && (
+          <Navbar
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            name={userdata?.username ?? ""}
+            role={userdata?.role.toString() ?? ""}
+            isbluck={isbluck}
+          ></Navbar>
+        )}
+
         {children}
       </div>
     </div>

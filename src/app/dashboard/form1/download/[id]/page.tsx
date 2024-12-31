@@ -6,8 +6,8 @@ import {
   form1_family,
   form1_land,
 } from "@prisma/client";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Table,
@@ -17,10 +17,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formateDate } from "@/utils/methods";
+import { formateDate, generatePDF } from "@/utils/methods";
+import { Button } from "antd";
+import { toast } from "react-toastify";
 
 const AddRecord = () => {
   const params = useParams();
+  const router = useRouter();
   const id: number = parseInt(
     Array.isArray(params.id) ? params.id[0] : params.id
   );
@@ -80,38 +83,57 @@ const AddRecord = () => {
       </div>
     );
   return (
-    <div className="p-2 mt-2">
-      <div className="bg-white p-2 shadow mt-2">
-        <p className="text-xl font-medium leading-6 mb-2">Form-1</p>
+    // <div className="p-2 mt-2">
+    //   <div className="bg-white p-2 shadow mt-2">
+    <div className="mainpdf" id="mainpdf">
+      {/* part one start here */}
+      <div
+        className="bg-white p-8 shadow h-[1123px] w-[794px] mx-auto"
+        id="mainpdf"
+      >
+        <p className="text-lg font-medium text-center leading-6 mb-2">
+          प्रशासन / Administration of <br /> संघ प्रदेश दादरा एवं नगर हवेली और
+          दमन एवं दीव / <br />
+          Dadra and Nager Haveli and Daman & Diu <br /> भूमि सुधार कार्यालय - 1
+          / Land Reforms Office - 1 <br /> सिलवासा / Silvassa
+        </p>
+        <p className="text-sm font-medium text-center ">FORM II</p>
+        <p className="text-sm font-medium text-center ">(See rule 6 (3))</p>
+        <p className="text-sm font-medium text-center ">
+          Register of acquisitions
+        </p>
+
+        <hr className="my-3" />
         <div className="flex gap-2 justify-between">
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
-            <p className="text-xs">Inward Number.</p>
+            <p className="text-xs">1. Serial Number :</p>
+
             <p className="text-sm leading-4 font-semibold">
-              {form1data && form1data.inward_number}
+              {form1data && form1data.sr_number}
             </p>
           </div>
-          <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
+          {/* <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
             <p className="text-xs">Inward Date.</p>
             <p className="text-sm leading-4 font-semibold">
               {form1data &&
                 form1data.date_of_inward &&
                 formateDate(new Date(form1data.date_of_inward.toString()))}
             </p>
-          </div>
+          </div> */}
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
-            <p className="text-xs">Holder Name</p>
+            <p className="text-xs">2. Holder Name</p>
             <p className="text-sm leading-4 font-semibold">
               {form1data && form1data.holder_name}
             </p>
           </div>
-          <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
+          {/* <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
             <p className="text-xs">Residence Place</p>
             <p className="text-sm leading-4 font-semibold">
               {form1data && form1data.residence_place}
             </p>
-          </div>
+          </div> */}
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
-            <p className="text-xs">Celiling Applicable</p>
+            <p className="text-xs">3. Ceiling Applicable</p>
             <p className="text-sm leading-4 font-semibold">
               {form1data && form1data.celiling_applicable}
             </p>
@@ -119,47 +141,7 @@ const AddRecord = () => {
         </div>
 
         <p className="text-[#162e57] text-sm mt-2">
-          Names of members of family and relationship to holder
-        </p>
-        <Table className="border mt-2">
-          <TableHeader>
-            <TableRow className="bg-gray-100">
-              <TableHead className="whitespace-nowrap w-10 border text-center p-1 h-8">
-                No
-              </TableHead>
-              <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-96">
-                Name
-              </TableHead>
-              <TableHead className="whitespace-nowrap border text-center p-1 h-8  w-64">
-                Age
-              </TableHead>
-              <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-64">
-                Relationship
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {form1data &&
-              form1data.form1_family.map((val: form1_family, index: number) => (
-                <TableRow key={index}>
-                  <TableCell className="p-2 border text-left">
-                    {index + 1}
-                  </TableCell>
-                  <TableCell className="p-2 border text-left">
-                    {val.name}
-                  </TableCell>
-                  <TableCell className="p-2 border text-center">
-                    {val.age}
-                  </TableCell>
-                  <TableCell className="p-2 border text-center">
-                    {val.relationship}
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <p className="text-[#162e57] text-sm mt-2">
-          Details of land held before new acquisition
+          4. Area of land held prior to acquisition
         </p>
         <Table className="border mt-2">
           <TableHeader>
@@ -208,9 +190,8 @@ const AddRecord = () => {
             )}
           </TableBody>
         </Table>
-
         <p className="text-[#162e57] text-sm mt-2">
-          Details of land held before new acquisition
+          5. Area of land acquired (under this applicaton)
         </p>
         <Table className="border mt-2">
           <TableHeader>
@@ -275,6 +256,48 @@ const AddRecord = () => {
             )}
           </TableBody>
         </Table>
+
+        <p className="text-[#162e57] text-sm mt-2">
+          6. Names of members of family and relationship to holder
+        </p>
+        <Table className="border mt-2">
+          <TableHeader>
+            <TableRow className="bg-gray-100">
+              <TableHead className="whitespace-nowrap w-10 border text-center p-1 h-8">
+                No
+              </TableHead>
+              <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-96">
+                Name
+              </TableHead>
+              <TableHead className="whitespace-nowrap border text-center p-1 h-8  w-64">
+                Age
+              </TableHead>
+              <TableHead className="whitespace-nowrap border text-center p-1 h-8 w-64">
+                Relationship
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {form1data &&
+              form1data.form1_family.map((val: form1_family, index: number) => (
+                <TableRow key={index}>
+                  <TableCell className="p-2 border text-left">
+                    {index + 1}
+                  </TableCell>
+                  <TableCell className="p-2 border text-left">
+                    {val.name}
+                  </TableCell>
+                  <TableCell className="p-2 border text-center">
+                    {val.age}
+                  </TableCell>
+                  <TableCell className="p-2 border text-center">
+                    {val.relationship}
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+
         <div className="flex gap-2 justify-between mt-2">
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
             <p className="text-xs">Action</p>
@@ -290,8 +313,28 @@ const AddRecord = () => {
           </div>
         </div>
 
-        <div className="w-full flex gap-2 mt-2">
+        <div className="w-full flex gap-2 mt-2 hidden-print">
           <div className="grow"></div>
+          <Button
+            size="small"
+            onClick={() => {
+              router.back();
+            }}
+          >
+            Back
+          </Button>
+          <Button
+            size="small"
+            type="primary"
+            className="bg-blue-500"
+            onClick={() => {
+              generatePDF(
+                `dashboard/form1/download/${form1data?.id.toString()}?sidebar=no`
+              );
+            }}
+          >
+            Download
+          </Button>
         </div>
       </div>
     </div>

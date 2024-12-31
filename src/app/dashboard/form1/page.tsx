@@ -208,14 +208,25 @@ const CreateAccountPage = () => {
                         </Button>
                       )}
 
-                      {["SUPTD"].includes(userdata?.role!) && (
+                      {["SUPTD"].includes(userdata?.role!) && !val.action_taken && (
                         <Button
                           onClick={() => {
-                            router.push(`/dashboard/form1/edit/${val.id}`);
+                            router.push(`/dashboard/form1/generate/${val.id}`);
                           }}
                           className="text-white bg-blue-500 hover:bg-blue-600 hover:-translate-y-1 transition-all duration-500 rounded-sm px-2 h-8 text-sm flex items-center gap-2  font-medium py-2"
                         >
-                          FORM II
+                          Generate
+                        </Button>
+                      )}
+
+                      {val.action_taken && (
+                        <Button
+                          onClick={() => {
+                            router.push(`/dashboard/form1/download/${val.id}`);
+                          }}
+                          className="text-white bg-blue-500 hover:bg-blue-600 hover:-translate-y-1 transition-all duration-500 rounded-sm px-2 h-8 text-sm flex items-center gap-2  font-medium py-2"
+                        >
+                          Download
                         </Button>
                       )}
                     </TableCell>

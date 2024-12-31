@@ -32,6 +32,7 @@ interface AddForm1Payload {
   form1_family: Form1FamilyType[];
   form1_land: Form1LandType[];
   form1_acquisition: Form1AcquisitionType[];
+  file?: string;
 }
 
 import { errorToString } from "@/utils/methods";
@@ -57,6 +58,9 @@ const AddFrom1 = async (
         ...(payload.remark && {
           remark: payload.remark,
         }),
+        ...(payload.file && {
+          file: payload.file,
+        }),
       },
     });
 
@@ -68,6 +72,31 @@ const AddFrom1 = async (
         functionname: "fileSubmit",
       };
     }
+
+    const generateSerialNumber = (id: string): string => {
+      // Get the current date
+      const now = new Date();
+
+      // Format the date as ddmmdd
+      const day = String(now.getDate()).padStart(2, "0"); // Two digits
+      const month = String(now.getMonth() + 1).padStart(2, "0"); // Two digits (months are 0-indexed)
+      const year = String(now.getFullYear()).slice(-2); // Last two digits of the year
+
+      // Format the ID as a 4-digit string
+      const paddedId = String(id).padStart(4, "0");
+
+      // Combine the date and ID
+      return `${day}${month}${year}${paddedId}`;
+    };
+
+    const update_response = await prisma.form1.update({
+      where: {
+        id: form1_response.id,
+      },
+      data: {
+        sr_number: generateSerialNumber(form1_response.id.toString()),
+      },
+    });
 
     const form1_family = await prisma.form1_family.createMany({
       data: payload.form1_family.map((val: Form1FamilyType) => ({

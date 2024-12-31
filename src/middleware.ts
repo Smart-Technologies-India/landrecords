@@ -30,6 +30,12 @@ export async function middleware(request: NextRequest) {
     }
   };
 
+  if (request.nextUrl.pathname.startsWith("/dashboard/form1/download")) {
+    return NextResponse.next();
+  }
+
+  request.nextUrl.pathname.startsWith("/dashboard/cform");
+
   if (
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/register")

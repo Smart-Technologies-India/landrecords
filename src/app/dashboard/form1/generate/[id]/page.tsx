@@ -7,7 +7,7 @@ import {
   form1_land,
 } from "@prisma/client";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Table,
@@ -18,6 +18,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formateDate } from "@/utils/methods";
+import Link from "next/link";
+import { Button as ShButton } from "@/components/ui/button";
+import { Input } from "antd";
+import { Input as ShInput } from "@/components/ui/input";
+import { toast } from "react-toastify";
 
 const AddRecord = () => {
   const params = useParams();
@@ -43,6 +48,8 @@ const AddRecord = () => {
       });
       if (response.status && response.data) {
         setForm1Data(response.data);
+        setRemark(response.data.remark ?? undefined);
+        setActionTaken(response.data.action_taken);
       }
       setIsLoading(false);
     };
@@ -73,6 +80,44 @@ const AddRecord = () => {
     return result;
   }
 
+  const [isActionTaken, setActionTaken] = useState<boolean | null>(null);
+
+  const [file, setFile] = useState<File | null>(null);
+  const cFile = useRef<HTMLInputElement>(null);
+
+  const [remark, setRemark] = useState<string | undefined>(undefined);
+
+  const longtext = (text: string, long: number): string => {
+    if (text.length <= long) {
+      return text;
+    } else {
+      return text.substring(0, long) + " ...";
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+
+    if (selectedFile) {
+      const fileSize = selectedFile.size / (1024 * 1024);
+
+      if (fileSize < 25) {
+        if (
+          selectedFile.type.startsWith("image/") ||
+          selectedFile.type.startsWith("application/pdf")
+        ) {
+          setFile(selectedFile);
+        } else {
+          toast.error("Please select an image or pdf file.", {
+            theme: "light",
+          });
+        }
+      } else {
+        toast.error("File size must be less than 5 MB.", { theme: "light" });
+      }
+    }
+  };
+
   if (isLoading)
     return (
       <div className="h-screen w-full grid place-items-center text-3xl text-gray-600 bg-gray-200">
@@ -82,7 +127,13 @@ const AddRecord = () => {
   return (
     <div className="p-2 mt-2">
       <div className="bg-white p-2 shadow mt-2">
-        <p className="text-xl font-medium leading-6 mb-2">Form-1</p>
+        <p className="text-xl font-medium text-center leading-6 mb-2">
+          प्रशासन / Administration of <br /> संघ प्रदेश दादरा एवं नगर हवेली और
+          दमन एवं दीव / <br />
+          Dadra and Nager Haveli and Daman & Diu <br /> भूमि सुधार कार्यालय - 1
+          / Land Reforms Office - 1 <br /> सिलवासा / Silvassa
+        </p>
+        <hr className="my-3" />
         <div className="flex gap-2 justify-between">
           <div className="grid place-items-center bg-gray-100 p-2 rounded flex-1">
             <p className="text-xs">Inward Number.</p>
@@ -288,6 +339,119 @@ const AddRecord = () => {
               {form1data && form1data.remark}
             </p>
           </div>
+        </div>
+
+        <div className="border rounded-md mt-10 p-3">
+          <h1 className="text-center text-xl font-semibold">FORM 2</h1>
+          <p className="text-center texxt-lg">(See Rule 6 (II))</p>
+          <p className="text-left text-sm mt-4">
+            Statement to be furnished under sub-section (2) of section 11 of the
+            Dadra and Nagar Haveli Land Reforms Regulation, 1971.
+          </p>
+          <div className="mt-4"></div>
+
+          <Table className="border mt-2">
+            <TableHeader>
+              <TableRow className="bg-gray-100">
+                <TableHead className="whitespace-nowrap border text-center p-1 h-8">
+                  Action Taken
+                </TableHead>
+                <TableHead className="whitespace-nowrap border text-center p-1 h-8">
+                  Remark
+                </TableHead>
+
+                {isActionTaken && (
+                  <TableHead className="whitespace-nowrap border text-center p-1 h-8">
+                    File Upload
+                  </TableHead>
+                )}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="p-2 border text-center">
+                  <div className="flex gap-4 mt-1 items-center justify-center">
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="radio"
+                        value="yes"
+                        checked={isActionTaken === true}
+                        onChange={() => setActionTaken(true)}
+                      />
+                      Yes
+                    </label>
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="radio"
+                        value="no"
+                        checked={isActionTaken === false}
+                        onChange={() => setActionTaken(false)}
+                      />
+                      No
+                    </label>
+                  </div>
+                </TableCell>
+                <TableCell className="p-2 border text-center">
+                  <Input.TextArea
+                    value={remark}
+                    name="remark"
+                    onChange={(e) => {
+                      setRemark(e.target.value);
+                    }}
+                    placeholder="Enter Remark"
+                    required={true}
+                    style={{ height: 80, resize: "none" }}
+                  />
+                </TableCell>
+                {isActionTaken && (
+                  <TableCell className="p-2 border text-center">
+                    <div className="flex gap-4 flex-1 mt-2 items-center justify-center">
+                      <p className="text-sm">
+                        {file != null
+                          ? longtext(file.name, 10)
+                          : "No File Selected"}
+                      </p>
+                      <ShButton
+                        onClick={() => cFile.current?.click()}
+                        variant={"secondary"}
+                        className="bg-gray-200 hover:bg-gray-300 h-8"
+                      >
+                        {file == null ? "Upload File" : "Change File"}
+                      </ShButton>
+                      {file != null && (
+                        <Link
+                          target="_blank"
+                          href={URL.createObjectURL(file!)}
+                          className="bg-gray-200 text-black py-1 px-4 rounded-md text-sm h-8 grid place-items-center"
+                        >
+                          View File
+                        </Link>
+                      )}
+
+                      {form1data && form1data.url && (
+                        <Link
+                          target="_blank"
+                          href={form1data.url.replace("/public", "")}
+                          className="bg-gray-200 text-black py-1 px-4 rounded-md text-sm h-8 grid place-items-center"
+                        >
+                          View
+                        </Link>
+                      )}
+
+                      <div className="hidden">
+                        <ShInput
+                          type="file"
+                          ref={cFile}
+                          accept="*/*"
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                )}
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
 
         <div className="w-full flex gap-2 mt-2">

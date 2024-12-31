@@ -16,6 +16,7 @@ import {
   MutableRefObject,
   SetStateAction,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { formateDate, onFormError } from "@/utils/methods";
@@ -43,6 +44,10 @@ import { Label } from "../ui/label";
 import dayjs from "dayjs";
 import { propagateServerField } from "next/dist/server/lib/render-server";
 import { Router } from "lucide-react";
+import { Input as ShInput } from "@/components/ui/input";
+import Link from "next/link";
+import { Button as ShButton } from "@/components/ui/button";
+import uploadFile from "@/actions/upload";
 
 interface DataType {
   inward: string;
@@ -77,7 +82,9 @@ interface Form1AcquisitionType {
 type AddFrom1ProviderProps = {
   data: DataType;
   setData: Dispatch<SetStateAction<DataType>>;
+  file: File | null;
 };
+
 export const AddFrom1Provider = (props: AddFrom1ProviderProps) => {
   return (
     <>
@@ -168,35 +175,6 @@ const Form1Entry = (props: AddFrom1ProviderProps) => {
     handleSubmit,
     formState: { isSubmitting },
   } = useFormContext<Form1Form>();
-
-  // const onSubmit = async (data: Form1Form) => {
-  //   if (props.form1_family.length <= 0)
-  //     return toast.error("Add Family and relationshiop to holder.");
-  //   if (props.form1_land.length <= 0)
-  //     return toast.error("Add Details of land held new Acquisition.");
-  //   if (props.form1_acquisition.length <= 0)
-  //     return toast.error("Add Details of new Acquisition.");
-
-  //   const response = await AddFrom1({
-  //     form1_acquisition: props.form1_acquisition,
-  //     form1_family: props.form1_family,
-  //     form1_land: props.form1_land,
-  //     holder_name: data.holder_name,
-  //     celiling_applicable: data.celiling_applicable,
-  //     residence_place: data.residence_place,
-  //     remark: data.remark ?? "",
-  //     date_of_inward: data.date_of_inward,
-  //     inward_number: data.inward_number,
-  //     action: data.action ?? "",
-  //   });
-
-  //   if (response.status) {
-  //     toast.success("Record 30 added successfully");
-  //     router.back();
-  //   } else {
-  //     toast.error(response.message);
-  //   }
-  // };
 
   return (
     <>
@@ -710,6 +688,8 @@ type AddFrom1AcquisitionProviderProps = {
   setform1_acquisition: Dispatch<SetStateAction<Form1AcquisitionType[]>>;
   data: DataType;
   setData: Dispatch<SetStateAction<DataType>>;
+  setFile: Dispatch<SetStateAction<File | null>>;
+  file: File | null;
 };
 
 export const AddFrom1AcquisitionProvide = (
@@ -728,6 +708,8 @@ export const AddFrom1AcquisitionProvide = (
         setform1_acquisition={props.setform1_acquisition}
         data={props.data}
         setData={props.setData}
+        file={props.file}
+        setFile={props.setFile}
       />
     </FormProvider>
   );
@@ -828,6 +810,17 @@ const Form1AcquisitionEntry = (props: AddFrom1AcquisitionProviderProps) => {
     if (props.form1_acquisition.length <= 0)
       return toast.error("Add Details of new Acquisition.");
 
+    const formdata = new FormData();
+    formdata.append("file", props.file!);
+
+    const upload_response = await uploadFile(formdata);
+
+    let url: string | null = null;
+
+    if (typeof upload_response == "string") {
+      url = upload_response;
+    }
+
     const response = await AddFrom1({
       form1_acquisition: props.form1_acquisition,
       form1_family: props.form1_family,
@@ -839,6 +832,7 @@ const Form1AcquisitionEntry = (props: AddFrom1AcquisitionProviderProps) => {
       date_of_inward: props.data.inward_date.toISOString(),
       inward_number: props.data.inward,
       action: "",
+      file: url ?? undefined,
     });
 
     if (response.status) {
@@ -873,6 +867,38 @@ const Form1AcquisitionEntry = (props: AddFrom1AcquisitionProviderProps) => {
     ).padStart(2, "0")}`;
     return result;
   }
+  const cFile = useRef<HTMLInputElement>(null);
+
+  const longtext = (text: string, long: number): string => {
+    if (text.length <= long) {
+      return text;
+    } else {
+      return text.substring(0, long) + " ...";
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+
+    if (selectedFile) {
+      const fileSize = selectedFile.size / (1024 * 1024);
+
+      if (fileSize < 25) {
+        if (
+          selectedFile.type.startsWith("image/") ||
+          selectedFile.type.startsWith("application/pdf")
+        ) {
+          props.setFile(selectedFile);
+        } else {
+          toast.error("Please select an image or pdf file.", {
+            theme: "light",
+          });
+        }
+      } else {
+        toast.error("File size must be less than 5 MB.", { theme: "light" });
+      }
+    }
+  };
 
   return (
     <>
@@ -1039,6 +1065,38 @@ const Form1AcquisitionEntry = (props: AddFrom1AcquisitionProviderProps) => {
       </form>
       <div className="w-full flex gap-2 mt-2">
         <div className="grow"></div>
+        <div className="flex gap-4 items-center justify-center">
+          <p className="text-sm">
+            {props.file != null
+              ? longtext(props.file.name, 10)
+              : "No File Selected"}
+          </p>
+          <ShButton
+            onClick={() => cFile.current?.click()}
+            variant={"secondary"}
+            className="bg-gray-200 hover:bg-gray-300 h-8"
+          >
+            {props.file == null ? "Upload File" : "Change File"}
+          </ShButton>
+          {props.file != null && (
+            <Link
+              target="_blank"
+              href={URL.createObjectURL(props.file!)}
+              className="bg-gray-200 text-black py-1 px-4 rounded-md text-sm h-8 grid place-items-center"
+            >
+              View File
+            </Link>
+          )}
+
+          <div className="hidden">
+            <ShInput
+              type="file"
+              ref={cFile}
+              accept="*/*"
+              onChange={handleFileChange}
+            />
+          </div>
+        </div>
         <button
           type="submit"
           onClick={addData}

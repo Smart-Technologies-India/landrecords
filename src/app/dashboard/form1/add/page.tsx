@@ -55,6 +55,8 @@ const AddRecord = () => {
     remark: "",
   });
 
+  const [file, setFile] = useState<File | null>(null);
+
   return (
     <div className="p-2 mt-2">
       <div className="bg-white p-2 shadow mt-2">
@@ -65,7 +67,7 @@ const AddRecord = () => {
           Dadra and Nagar Haveli Land Reforms Regulation, 1971.
         </p>
         <div className="mt-4"></div>
-        <AddFrom1Provider data={data} setData={setData} />
+        <AddFrom1Provider data={data} setData={setData} file={file} />
         <AddFrom1FamilyProvide
           form1_family={form1_family}
           setform1_family={setform1_family}
@@ -83,6 +85,8 @@ const AddRecord = () => {
           setform1_acquisition={setform1_acquisition}
           data={data}
           setData={setData}
+          file={file}
+          setFile={setFile}
         />
       </div>
     </div>
