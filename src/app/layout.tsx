@@ -1,11 +1,14 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useBeforeunload } from "react-beforeunload";
 import type { Metadata } from "next";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { deleteCookie } from "cookies-next";
+import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+
 
 // export const metadata: Metadata = {
 //   title: "Land Records",
@@ -94,6 +97,14 @@ export default function RootLayout({
       <body>
         {children}
         <ToastContainer />
+        <Suspense>
+        <ProgressBar
+          height="4px"
+          color="#4f46e5"
+          options={{ showSpinner: false, speed: 500 }}
+          delay={500}
+        />
+          </Suspense>
       </body>
     </html>
   );
