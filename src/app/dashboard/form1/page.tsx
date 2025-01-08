@@ -139,7 +139,7 @@ const CreateAccountPage = () => {
       <div className="flex gap-2 items-center">
         <h1 className="text-[#162f57] text-2xl font-semibold">Form-1</h1>
         <div className="grow"></div>
-        {["LDC", "SUPTD"].includes(userdata?.role!) && (
+        {["LDC", "SUPTD", "DEPARTMENT"].includes(userdata?.role!) && (
           <Link
             href={"/dashboard/form1/add"}
             className="text-white bg-blue-500 hover:bg-blue-600 hover:-translate-y-1 transition-all duration-500 rounded-sm px-2 h-8 text-sm flex items-center gap-2  font-medium py-2"
@@ -197,7 +197,9 @@ const CreateAccountPage = () => {
                       {val.celiling_applicable}
                     </TableCell>
                     <TableCell className="flex gap-2 p-2">
-                      {["LDC", "SUPTD"].includes(userdata?.role!) && (
+                      {["LDC", "SUPTD", "DEPARTMENT"].includes(
+                        userdata?.role!
+                      ) && (
                         <Button
                           onClick={() => {
                             router.push(`/dashboard/form1/view/${val.id}`);
@@ -208,16 +210,19 @@ const CreateAccountPage = () => {
                         </Button>
                       )}
 
-                      {["SUPTD"].includes(userdata?.role!) && !val.action_taken && (
-                        <Button
-                          onClick={() => {
-                            router.push(`/dashboard/form1/generate/${val.id}`);
-                          }}
-                          className="text-white bg-blue-500 hover:bg-blue-600 hover:-translate-y-1 transition-all duration-500 rounded-sm px-2 h-8 text-sm flex items-center gap-2  font-medium py-2"
-                        >
-                          Generate
-                        </Button>
-                      )}
+                      {["SUPTD"].includes(userdata?.role!) &&
+                        !val.action_taken && (
+                          <Button
+                            onClick={() => {
+                              router.push(
+                                `/dashboard/form1/generate/${val.id}`
+                              );
+                            }}
+                            className="text-white bg-blue-500 hover:bg-blue-600 hover:-translate-y-1 transition-all duration-500 rounded-sm px-2 h-8 text-sm flex items-center gap-2  font-medium py-2"
+                          >
+                            Generate
+                          </Button>
+                        )}
 
                       {val.action_taken && (
                         <Button
