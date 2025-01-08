@@ -134,10 +134,16 @@ const AddRecord = () => {
         id="mainpdf"
       >
         <p className="text-lg font-medium text-center leading-6 mb-2">
-          प्रशासन / Administration of <br /> संघ प्रदेश दादरा एवं नगर हवेली और
-          दमन एवं दीव / <br />
-          Dadra and Nager Haveli and Daman & Diu <br /> भूमि सुधार कार्यालय - 1
-          / Land Reforms Office - 1 <br /> सिलवासा / Silvassa
+          {/* प्रशासन /  */}
+          Administration of <br />
+          {/* संघ प्रदेश दादरा एवं नगर हवेली और */}
+          {/* दमन एवं दीव /  */}
+          {/* <br /> */}
+          Dadra and Nager Haveli and Daman & Diu <br />
+          {/* भूमि सुधार कार्यालय - 1 /  */}
+          Land Reforms Office - 1 <br />
+          {/* सिलवासा /  */}
+          Silvassa
         </p>
         <p className="text-sm font-medium text-center ">FORM II</p>
         <p className="text-sm font-medium text-center ">(See rule 6 (3))</p>
