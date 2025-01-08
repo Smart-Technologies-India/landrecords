@@ -5,7 +5,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const { url } = await req.json();
     // Launch a new browser instance
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: ["--no-sandbox"],
+    });
     const page = await browser.newPage();
 
     // Navigate to your desired page
