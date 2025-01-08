@@ -816,15 +816,17 @@ const Form1AcquisitionEntry = (props: AddFrom1AcquisitionProviderProps) => {
     if (props.form1_acquisition.length <= 0)
       return toast.error("Add Details of new Acquisition.");
 
-    const formdata = new FormData();
-    formdata.append("file", props.file!);
-
-    const upload_response = await uploadFile(formdata);
-
     let url: string | null = null;
 
-    if (typeof upload_response == "string") {
-      url = upload_response;
+    if (props.file) {
+      const formdata = new FormData();
+      formdata.append("file", props.file!);
+
+      const upload_response = await uploadFile(formdata);
+
+      if (typeof upload_response == "string") {
+        url = upload_response;
+      }
     }
 
     const response = await AddFrom1({

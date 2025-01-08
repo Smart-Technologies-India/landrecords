@@ -10,11 +10,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     // Navigate to your desired page
 
-    await page.goto(`http://localhost:6060/${url}`, {
+    await page.goto(`http://194.238.22.198:6060//${url}`, {
       waitUntil: "networkidle2",
     });
 
-    console.log(`http://localhost:6060/${url}`);
+    console.log(`http://194.238.22.198:6060//${url}`);
 
     await page.waitForSelector("#mainpdf", {
       visible: true,
